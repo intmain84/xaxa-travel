@@ -1,4 +1,7 @@
 @import "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
@@ -18,4 +21,25 @@
 
 .leaflet-container {
   height: 100vh;
+}
+
+@layer base {
+  h1 {
+    @apply text-2xl font-bold leading-7;
+  }
+  h2 {
+    @apply text-xl font-bold;
+  }
+
+  h3 {
+    @apply text-lg font-bold;
+  }
+
+  a {
+    @apply text-green-600;
+  }
+
+  a:hover {
+    @apply text-green-700;
+  }
 }

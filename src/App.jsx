@@ -1,41 +1,29 @@
-import {
-  MapContainer,
-  Marker,
-  Popup,
-  TileLayer,
-  useMapEvents,
-} from "react-leaflet";
-import "./index.css";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Layout from "./Layout";
+import Home from "./pages/Home";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
+import Location from "./pages/Location";
+import NoMatch from "./pages/NoMatch";
+import { Suspense } from "react";
+import SpinnerFull from "./components/SpinnerFull";
 
 function App() {
-  const position = [51.505, -0.09];
-
   return (
-    <div className="map-container">
-      <MapContainer center={position} zoom={13}>
-        <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
-        <Marker position={position}>
-          <Popup>
-            A pretty CSS3 popup. <br /> Easily customizable.
-          </Popup>
-        </Marker>
-        <ClickPosition />
-      </MapContainer>
-    </div>
+    <BrowserRouter>
+      <Suspense fallback={<SpinnerFull />}>
+        <Routes>
+          <Route path="/" element={<Layout />}>
+            <Route index element={<Home />}></Route>
+            <Route path="login" element={<Login />}></Route>
+            <Route path="signup" element={<Signup />}></Route>
+            <Route path="location/:id" element={<Location />}></Route>
+            <Route path="*" element={<NoMatch />} />
+          </Route>
+        </Routes>
+      </Suspense>
+    </BrowserRouter>
   );
-}
-
-function ClickPosition() {
-  useMapEvents({
-    click: (e) => {
-      console.log(e);
-    },
-  });
-
-  return null;
 }
 
 export default App;
