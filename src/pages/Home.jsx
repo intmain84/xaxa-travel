@@ -1,21 +1,17 @@
-import { Link } from "react-router-dom";
+import Button from "../components/Button";
 
 function Home() {
   return (
-    <div className="flex flex-col items-center h-shv">
+    <div className="h-shv flex flex-col items-center">
       <div>
         <h1 className="text-center">Твои путешествия на карте!</h1>
-        <p className="text-center mt-4 text-lg">
+        <p className="mt-4 text-center text-lg">
           Открывай новые места вместе с другими путешественниками и делись
           своими на карте
         </p>
-        <p className="text-center mt-4 text-lg">
-          Чтобы добавлять точки на карту необходимо{" "}
-          {
-            <Link className="font-bold" to="/login">
-              авторизоваться
-            </Link>
-          }
+        <p className="mt-4 text-center text-lg">
+          Чтобы добавлять точки на карту необходимо авторизоваться
+          <Button to="/login">Войти</Button>
         </p>
       </div>
     </div>
