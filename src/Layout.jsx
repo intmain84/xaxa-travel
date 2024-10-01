@@ -3,7 +3,7 @@ import Map from "./components/Map";
 
 function Layout() {
   return (
-    <div className="grid grid-cols-[25%_auto]">
+    <div className="grid grid-cols-[450px_auto]">
       <Sidebar />
       <Map />
     </div>

@@ -3,7 +3,7 @@ import Header from "./Header";
 
 function Sidebar() {
   return (
-    <main className="flex flex-col  p-5">
+    <main className="grid grid-rows-[auto_auto] p-5">
       <Header />
       <Outlet />
     </main>
