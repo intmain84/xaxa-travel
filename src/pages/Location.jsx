@@ -15,10 +15,9 @@ function Location() {
     if (!isPending && !error)
         return (
             <>
-                <div>{data.name}</div>
-                <div>{data.description}</div>
-                <div>{data.lat}</div>
-                <div>{data.lng}</div>
+                <div>Location: {data.name}</div>
+                <div>Description: {data.description}</div>
+                <div>Added by Alexey</div>
             </>
         )
 }
