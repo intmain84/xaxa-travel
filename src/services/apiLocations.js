@@ -16,6 +16,8 @@ export async function getLocation(id) {
         .select('*')
         .eq('id', id)
 
+    if (data.length === 0) throw new Error('No location found')
+
     if (error) throw new Error(error.message)
 
     const location = data[0]
@@ -27,6 +29,21 @@ export async function createLocation(newLocation) {
     const { data, error } = await supabase
         .from('locations')
         .insert([newLocation])
+        .select()
+
+    if (error) throw new Error(error.message)
+
+    const { id } = data[0]
+
+    return id
+}
+
+export async function createLocation(newData) {
+    const { id, data } = newData
+    const { data, error } = await supabase
+        .from('locations')
+        .update({ other_column: 'otherValue' })
+        .eq('id', id)
         .select()
 
     if (error) throw new Error(error.message)

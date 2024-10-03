@@ -10,6 +10,7 @@ import { Suspense } from 'react'
 import SpinnerFull from './components/SpinnerFull'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import EditLocation from './pages/EditLocation'
 
 const queryClient = new QueryClient({
     defaultOptions: {
@@ -32,8 +33,12 @@ function App() {
                             <Route path="login" element={<Login />}></Route>
                             <Route path="signup" element={<Signup />}></Route>
                             <Route
-                                path="form"
+                                path="create"
                                 element={<AddLocation />}
+                            ></Route>
+                            <Route
+                                path="location/:id/edit"
+                                element={<EditLocation />}
                             ></Route>
                             <Route
                                 path="location/:id"
