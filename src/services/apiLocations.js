@@ -38,12 +38,12 @@ export async function createLocation(newLocation) {
     return id
 }
 
-export async function createLocation(newData) {
-    const { id, data } = newData
+export async function editLocation(newData) {
+    const { id: sendId, ...sendData } = newData
     const { data, error } = await supabase
         .from('locations')
-        .update({ other_column: 'otherValue' })
-        .eq('id', id)
+        .update(sendData)
+        .eq('id', sendId)
         .select()
 
     if (error) throw new Error(error.message)

@@ -1,9 +1,21 @@
-import { useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Marker } from 'react-leaflet'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
 function MyMarker({ id, position, children }) {
+    const { id: locationId } = useParams()
+
+    const [animation, setAnimation] = useState(false)
+
     const navigate = useNavigate()
+
+    useEffect(() => {
+        if (id === Number(locationId)) {
+            setAnimation(true)
+        } else {
+            setAnimation(false)
+        }
+    }, [id, locationId])
 
     const eventHandlers = useMemo(
         () => ({
@@ -11,11 +23,15 @@ function MyMarker({ id, position, children }) {
                 navigate(`location/${id}`)
             },
         }),
-        []
+        [id, locationId]
     )
 
     return (
-        <Marker position={position} eventHandlers={eventHandlers}>
+        <Marker
+            className={`${animation ? 'bouncing-marker' : ''}`}
+            position={position}
+            eventHandlers={eventHandlers}
+        >
             {children}
         </Marker>
     )

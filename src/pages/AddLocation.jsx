@@ -3,21 +3,24 @@ import Button from '../components/Button'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { createLocation as createLocationApi } from '../services/apiLocations'
 import { useNavigate, useSearchParams } from 'react-router-dom'
+import useUrlPosition from '../hooks/useUrlPosition'
 
 function AddLocation() {
     const queryClient = useQueryClient()
-    const [searchParams] = useSearchParams()
+
     const navigate = useNavigate()
 
-    const lat = searchParams.get('lat')
-    const lng = searchParams.get('lng')
+    //Get coordinates from url search params
+    const [lat, lng] = useUrlPosition()
 
+    //HOOK FORM
     const {
         register,
         handleSubmit,
         formState: { errors },
     } = useForm()
 
+    //MUTATION
     const {
         data,
         mutate: createLocation,
@@ -26,10 +29,11 @@ function AddLocation() {
         mutationFn: createLocationApi,
         onSuccess: (data) => {
             queryClient.invalidateQueries({ queryKey: ['coord'] })
-            navigate(`/location/${data}`)
+            navigate(`/location/${data}?lat=${lat}&lng=${lng}`)
         },
     })
 
+    //Calling API function
     const onSubmit = (data) => {
         data = { ...data, lat: Number(lat), lng: Number(lng) }
         createLocation(data)

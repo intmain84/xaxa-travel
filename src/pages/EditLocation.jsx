@@ -40,14 +40,11 @@ function EditLocation() {
     })
 
     const onSubmit = (data) => {
-        data = { ...data, lat: Number(lat), lng: Number(lng) }
-        // editLocation(data)
-        return null
+        editLocation({ ...data, id })
     }
 
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
-            EDIT
             <div className="mb-4">
                 <label htmlFor="name" className="font-bold">
                     Name

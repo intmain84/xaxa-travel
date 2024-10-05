@@ -1,45 +1,61 @@
-@import "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";
+@import 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+    font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+    font-weight: 400;
 }
 
 * {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
 #root {
-  height: 100vh;
+    height: 100vh;
 }
 
 .leaflet-container {
-  height: 100vh;
+    height: 100vh;
 }
 
 @layer base {
-  h1 {
-    @apply text-3xl font-bold leading-10;
-  }
-  h2 {
-    @apply text-xl font-bold;
-  }
+    h1 {
+        @apply text-3xl font-bold leading-10;
+    }
+    h2 {
+        @apply text-xl font-bold;
+    }
 
-  h3 {
-    @apply text-lg font-bold;
-  }
+    h3 {
+        @apply text-lg font-bold;
+    }
 
-  a {
-    @apply text-green-600;
-  }
+    a {
+        @apply text-green-600;
+    }
 
-  a:hover {
-    @apply text-green-700;
-  }
+    a:hover {
+        @apply text-green-700;
+    }
+}
+
+@keyframes bounce {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.2);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.bouncing-marker {
+    transform: scale(2);
 }
