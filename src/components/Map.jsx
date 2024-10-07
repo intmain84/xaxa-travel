@@ -35,12 +35,12 @@ function Map() {
     const [mapLat, mapLng] = useUrlPosition()
 
     useEffect(() => {
-        getPosition()
-    }, [])
-
-    useEffect(() => {
         if (mapLat && mapLng) setMapPosition([mapLat, mapLng])
     }, [mapLat, mapLng])
+
+    useEffect(() => {
+        getPosition()
+    }, [])
 
     useEffect(() => {
         if (position) setMapPosition([position.lat, position.lng])
@@ -49,7 +49,7 @@ function Map() {
     return (
         <div className="map-container">
             <MapContainer center={mapPosition} zoom={11}>
-                <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+                <TileLayer url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png" />
                 {!isFetching &&
                     coord.map((pos) => (
                         <MyMarker
