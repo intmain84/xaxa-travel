@@ -1,8 +1,7 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import Layout from './Layout'
+import Layout from './components/Layout'
 import Home from './pages/Home'
 import Login from './pages/Login'
-import Signup from './pages/Signup'
 import Location from './pages/Location'
 import AddLocation from './pages/AddLocation'
 import NoMatch from './pages/NoMatch'
@@ -11,6 +10,7 @@ import SpinnerFull from './components/SpinnerFull'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import EditLocation from './pages/EditLocation'
+import ProtectedRoute from './components/ProtectedRoute'
 
 const queryClient = new QueryClient({
     defaultOptions: {
@@ -28,10 +28,15 @@ function App() {
             <BrowserRouter>
                 <Suspense fallback={<SpinnerFull />}>
                     <Routes>
-                        <Route path="/" element={<Layout />}>
+                        <Route
+                            path="/"
+                            element={
+                                <ProtectedRoute>
+                                    <Layout />
+                                </ProtectedRoute>
+                            }
+                        >
                             <Route index element={<Home />}></Route>
-                            <Route path="login" element={<Login />}></Route>
-                            <Route path="signup" element={<Signup />}></Route>
                             <Route
                                 path="create"
                                 element={<AddLocation />}
@@ -44,6 +49,7 @@ function App() {
                                 path="location/:id"
                                 element={<Location />}
                             ></Route>
+                            <Route path="login" element={<Login />}></Route>
                             <Route path="*" element={<NoMatch />} />
                         </Route>
                     </Routes>

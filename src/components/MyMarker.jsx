@@ -24,7 +24,6 @@ function MyMarker({ id, position, children }) {
     })
 
     useEffect(() => {
-        console.log(Number(locationId) === id)
         if (Number(locationId) === id) {
             setIconOptions({
                 iconUrl: markerActive,

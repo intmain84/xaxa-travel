@@ -1,7 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import {
     MapContainer,
-    Marker,
     TileLayer,
     Tooltip,
     useMap,

@@ -5,7 +5,7 @@ export async function getCoordinates() {
         .from('locations')
         .select('id, name, lat, lng')
 
-    if (error) throw new Error(error.message)
+    if (error) console.log(error)
 
     return data
 }
