@@ -31,6 +31,7 @@ function EditLocation() {
         data,
         mutate: editLocation,
         isLoading,
+        error: errorEdit,
     } = useMutation({
         mutationFn: editLocationApi,
         onSuccess: (data) => {

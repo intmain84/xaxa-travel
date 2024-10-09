@@ -3,14 +3,9 @@ import supabase from './supabase'
 export async function googleSignIn() {
     const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
-        options: {
-            redirectTo: 'http://localhost:5173/welcome',
-        },
     })
 
-    if (error) {
-        console.log('Ошибка', error)
-    }
+    if (error) throw newError(error.message)
 
     const { provider } = data
 
@@ -24,11 +19,7 @@ export async function getCurrentUser() {
 
     const { data: user, error } = await supabase.auth.getUser()
 
-    console.log(user)
-
-    if (error) {
-        console.log('Ошибка', error)
-    }
+    if (error) throw newError(error.message)
 
     return user?.user
 }
