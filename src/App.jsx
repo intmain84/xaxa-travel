@@ -20,7 +20,7 @@ import { UserProvider } from './context/UserContext'
 export const queryClient = new QueryClient({
     defaultOptions: {
         queries: {
-            // staleTime: 60 * 1000,
+            ///sdf
             staleTime: 0,
         },
     },
