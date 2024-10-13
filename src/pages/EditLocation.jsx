@@ -78,9 +78,14 @@ function EditLocation() {
                     {errors?.description?.message}
                 </p>
             </div>
-            <Button primary onSubmit={handleSubmit(onSubmit)}>
-                Add location
-            </Button>
+            <div className="flex gap-3">
+                <Button primary onSubmit={handleSubmit(onSubmit)}>
+                    Add location
+                </Button>
+                <Button secondary onSubmit={() => navigate(-1)}>
+                    Cancel
+                </Button>
+            </div>
         </form>
     )
 }

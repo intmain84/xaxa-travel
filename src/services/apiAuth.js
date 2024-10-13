@@ -5,7 +5,7 @@ export async function googleSignIn() {
         provider: 'google',
     })
 
-    if (error) throw newError(error.message)
+    if (error) throw new Error(error.message)
 
     const { provider } = data
 
@@ -15,11 +15,13 @@ export async function googleSignIn() {
 export async function getCurrentUser() {
     const { data: session } = await supabase.auth.getSession()
 
+    //console.log(session.session.access_token)
     if (!session.session) return null
+
 
     const { data: user, error } = await supabase.auth.getUser()
 
-    if (error) throw newError(error.message)
+    if (error) throw new Error(error.message)
 
     return user?.user
 }

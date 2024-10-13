@@ -1,21 +1,18 @@
-import { Link, useNavigate } from 'react-router-dom'
-import Logo from './Logo'
+import { Link } from 'react-router-dom'
+import { queryClient } from '../services/queryClient.js'
 import supabase from '../services/supabase'
+
+import Logo from './Logo'
 import Button from '../components/Button'
-import { queryClient } from '../App'
 import { useContext } from 'react'
 import { UserContext } from '../context/UserContext'
 
 function Header() {
     const { isLoggedIn } = useContext(UserContext)
-    const navigate = useNavigate()
 
     const signOut = async () => {
         const { error } = await supabase.auth.signOut()
         queryClient.invalidateQueries({ queryKey: ['user'] })
-        // if (!error) {
-        //     navigate('/', { replace: true })
-        // }
     }
 
     return (

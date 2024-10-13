@@ -1,7 +1,7 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { Suspense } from 'react'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import { queryClient, QueryClientProvider } from './services/queryClient.js'
 
 import Layout from './components/Layout'
 import Home from './pages/Home'
@@ -16,15 +16,8 @@ import SpinnerFull from './components/SpinnerFull'
 import ProtectedAllRoutes from './components/ProtectedAllRoutes'
 import ProtectedHomeRoute from './components/ProtectedHomeRoute'
 import { UserProvider } from './context/UserContext'
+import ProtectedPublicRoute from './components/ProtectedPublicRoute.jsx'
 
-export const queryClient = new QueryClient({
-    defaultOptions: {
-        queries: {
-            ///sdf
-            staleTime: 0,
-        },
-    },
-})
 
 function App() {
     return (
@@ -74,7 +67,10 @@ function App() {
                                 {/* Public routes */}
                                 <Route
                                     path="location/:id"
-                                    element={<Location />}
+                                    element={
+                                    <ProtectedPublicRoute>
+                                        <Location />
+                                    </ProtectedPublicRoute>}
                                 ></Route>
                                 <Route path="*" element={<NoMatch />} />
                             </Route>

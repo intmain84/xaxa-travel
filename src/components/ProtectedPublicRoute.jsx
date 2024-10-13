@@ -1,11 +1,9 @@
 import { useContext, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
 import useUser from '../hooks/useUser'
 import SpinnerFull from './SpinnerFull'
 import { UserContext } from '../context/UserContext'
 
-function ProtectedHomeRoute({ children }) {
-    const navigate = useNavigate()
+function ProtectedPublicRoute({ children }) {
     const { setIsLoggedIn } = useContext(UserContext)
 
     const { isAuthenticated, isPending, error } = useUser()
@@ -13,7 +11,8 @@ function ProtectedHomeRoute({ children }) {
     useEffect(() => {
         if (isAuthenticated && !isPending) {
             setIsLoggedIn(true)
-            navigate('/profile')
+        } else {
+            setIsLoggedIn(false)
         }
     }, [isAuthenticated, isPending])
 
@@ -21,9 +20,7 @@ function ProtectedHomeRoute({ children }) {
 
     if (error) return <div>{error.message}</div>
 
-    if (!isAuthenticated && !isPending && !error) {
-        return children
-    }
+    return children
 }
 
-export default ProtectedHomeRoute
+export default ProtectedPublicRoute
