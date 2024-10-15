@@ -8,14 +8,14 @@ function ProtectedAllRoutes({ children }) {
     const { setIsLoggedIn } = useContext(UserContext)
     const navigate = useNavigate()
 
-    const { isAuthenticated, isPending, error } = useUser()
+    const { uuid, isAuthenticated, isPending, error } = useUser()
 
     useEffect(() => {
         if (!isAuthenticated && !isPending) {
-            setIsLoggedIn(false)
+            setIsLoggedIn(null)
             navigate('/')
         } else if (isAuthenticated && !isPending && !error) {
-            setIsLoggedIn(true)
+            setIsLoggedIn(uuid)
         }
     }, [isAuthenticated, isPending])
 

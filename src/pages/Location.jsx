@@ -19,19 +19,20 @@ function Location() {
     if (isPending && !error) return <SpinnerFull />
 
     //DATA
-    if (!isPending && !error)
+    if (!isPending && !error) {
         return (
             <>
                 <div>Location: {location.name}</div>
                 <div>Description: {location.description}</div>
                 <div>Added by Alexey</div>
-                {isLoggedIn && (
+                {isLoggedIn === location.user_uuid && (
                     <Button secondary to={`/location/${id}/edit`}>
                         Edit
                     </Button>
                 )}
             </>
         )
+    }
 }
 
 export default Location

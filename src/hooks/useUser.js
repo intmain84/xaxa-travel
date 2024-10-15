@@ -11,7 +11,12 @@ function useUser() {
         queryFn: getCurrentUser,
     })
 
-    return { isAuthenticated: user?.role === 'authenticated', error, isPending }
+    return {
+        uuid: user?.id,
+        isAuthenticated: user?.role === 'authenticated',
+        error,
+        isPending,
+    }
 }
 
 export default useUser

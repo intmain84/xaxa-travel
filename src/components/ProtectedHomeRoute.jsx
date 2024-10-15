@@ -8,11 +8,11 @@ function ProtectedHomeRoute({ children }) {
     const navigate = useNavigate()
     const { setIsLoggedIn } = useContext(UserContext)
 
-    const { isAuthenticated, isPending, error } = useUser()
+    const { uuid, isAuthenticated, isPending, error } = useUser()
 
     useEffect(() => {
         if (isAuthenticated && !isPending) {
-            setIsLoggedIn(true)
+            setIsLoggedIn(uuid)
             navigate('/profile')
         }
     }, [isAuthenticated, isPending])

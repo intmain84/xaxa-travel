@@ -6,13 +6,13 @@ import { UserContext } from '../context/UserContext'
 function ProtectedPublicRoute({ children }) {
     const { setIsLoggedIn } = useContext(UserContext)
 
-    const { isAuthenticated, isPending, error } = useUser()
+    const { uuid, isAuthenticated, isPending, error } = useUser()
 
     useEffect(() => {
         if (isAuthenticated && !isPending) {
-            setIsLoggedIn(true)
+            setIsLoggedIn(uuid)
         } else {
-            setIsLoggedIn(false)
+            setIsLoggedIn(null)
         }
     }, [isAuthenticated, isPending])
 
