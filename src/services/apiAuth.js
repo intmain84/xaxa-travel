@@ -11,7 +11,7 @@ export async function googleSignIn() {
     if (error) {
         console.log('Ошибка', error)
     }
-
+    
     const { provider } = data
 
     return provider
