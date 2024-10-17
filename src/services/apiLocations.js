@@ -13,12 +13,20 @@ export async function getCoordinates() {
 export async function getLocation(id) {
     let { data, error } = await supabase
         .from('locations')
-        .select('*')
+        .select(
+            `
+          *, 
+          profiles ( avatar_url, full_name ),
+          images (id, image_link)
+    `
+        )
         .eq('id', id)
 
     if (data.length === 0) throw new Error('No location found')
 
     if (error) throw new Error(error.message)
+
+    console.log(data[0])
 
     const location = data[0]
 

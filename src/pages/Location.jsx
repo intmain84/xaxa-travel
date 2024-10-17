@@ -1,12 +1,14 @@
 import { useParams } from 'react-router-dom'
-import { useQuery } from '@tanstack/react-query'
-import { getLocation } from '../services/apiLocations.js'
 import SpinnerFull from '../components/SpinnerFull.jsx'
 import Button from '../components/Button.jsx'
 import useGetLocation from '../hooks/useGetLocation.js'
+import { useContext } from 'react'
+import { UserContext } from '../context/UserContext.jsx'
 
 function Location() {
     const { id } = useParams()
+
+    const { isLoggedIn } = useContext(UserContext)
 
     const { data: location, isPending, error } = useGetLocation(id)
 
@@ -17,17 +19,38 @@ function Location() {
     if (isPending && !error) return <SpinnerFull />
 
     //DATA
-    if (!isPending && !error)
+    if (!isPending && !error) {
         return (
             <>
+                <div className="flex gap-3">
+                    {location.images.length > 0 &&
+                        location.images.map((image) => (
+                            <img
+                                key={image.id}
+                                src={image.image_link}
+                                alt=""
+                                className="w-15"
+                            />
+                        ))}
+                </div>
                 <div>Location: {location.name}</div>
                 <div>Description: {location.description}</div>
-                <div>Added by Alexey</div>
-                <Button secondary to={`/location/${id}/edit`}>
-                    Edit
-                </Button>
+                <div className="flex items-center gap-3">
+                    <img
+                        src={location.profiles.avatar_url}
+                        alt=""
+                        className="w-6 rounded-full"
+                    />
+                    <span>{location.profiles.full_name}</span>
+                </div>
+                {isLoggedIn === location.user_id && (
+                    <Button secondary to={`/location/${id}/edit`}>
+                        Edit
+                    </Button>
+                )}
             </>
         )
+    }
 }
 
 export default Location
