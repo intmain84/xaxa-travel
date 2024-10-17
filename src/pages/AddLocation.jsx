@@ -2,7 +2,7 @@ import { useForm } from 'react-hook-form'
 import Button from '../components/Button'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { createLocation as createLocationApi } from '../services/apiLocations'
-import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import useUrlPosition from '../hooks/useUrlPosition'
 import { useState } from 'react'
 
