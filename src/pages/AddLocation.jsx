@@ -5,8 +5,12 @@ import { createLocation as createLocationApi } from '../services/apiLocations'
 import { useNavigate } from 'react-router-dom'
 import useUrlPosition from '../hooks/useUrlPosition'
 import { useState } from 'react'
+import { useContext } from 'react'
+import { UserContext } from '../context/UserContext.jsx'
+
 
 function AddLocation() {
+    const { isLoggedIn } = useContext(UserContext)
     const queryClient = useQueryClient()
 
     const navigate = useNavigate()
@@ -14,14 +18,12 @@ function AddLocation() {
     //Get coordinates from url search params
     const [lat, lng] = useUrlPosition()
     const [images, setImages] = useState([])
-    const [imagesError, setImagesError] = useState(null)
 
     //HOOK FORM
     const {
         register,
         handleSubmit,
         formState: { errors },
-        setValue,
     } = useForm()
 
     //MUTATION
@@ -31,7 +33,7 @@ function AddLocation() {
         isLoading,
     } = useMutation({
         mutationFn: createLocationApi,
-        onSuccess: (data) => {
+        onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['coord'] })
             navigate(`/location/${id}?lat=${lat}&lng=${lng}`)
         },
@@ -39,27 +41,18 @@ function AddLocation() {
 
     //Calling API function
     const onSubmit = (data) => {
-        console.log('FROM SUBMIT', data)
-        console.log('IMAGES', images)
-        if (images.length === 0) {
-            setImagesError('Add at least one image')
-            return
-        }
-
-        const newImages = images.map((image) => image.file)
-
         data = {
             ...data,
             lat: Number(lat),
             lng: Number(lng),
-            images: newImages,
+            user_id: isLoggedIn
         }
         createLocation(data)
     }
 
     //Previewing images
     const onChangeFiles = (e) => {
-        if (e.target.files) {
+        if (e.target.files.length > 0) {
             const images = Array.from(e.target.files)
             const newImages = images.map((file) => ({
                 file,
@@ -70,12 +63,6 @@ function AddLocation() {
         }
     }
 
-    //Removing images
-    const removeImage = (outerIndex) => {
-        const newImages = images.filter((_, index) => index !== outerIndex)
-        setImages(newImages)
-    }
-
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
             {/* NAME */}
@@ -84,12 +71,13 @@ function AddLocation() {
                     Name
                 </label>
                 <input
+                    disabled={isLoading}
                     id="name"
                     type="text"
                     {...register('name', {
                         required: 'This field is required',
                     })}
-                    className={`mt-2 h-7 w-full rounded border border-black px-3 ${errors?.name?.message && 'border-red-600'}`}
+                    className={`mt-2 h-7 w-full rounded border border-black px-3 ${errors?.name?.message ? 'border-red-600' : ''}`}
                 />
                 <p className="mt-2 text-red-600">{errors?.name?.message}</p>
             </div>
@@ -100,12 +88,13 @@ function AddLocation() {
                     Description
                 </label>
                 <input
+                    disabled={isLoading}
                     id="description"
                     type="text"
                     {...register('description', {
                         required: 'This field is required',
                     })}
-                    className={`mt-2 h-7 w-full rounded border border-black px-3 ${errors?.description?.message && 'border-red-600'}`}
+                    className={`mt-2 h-7 w-full rounded border border-black px-3 ${errors?.description?.message ? 'border-red-600' : ''}`}
                 />
                 <p className="mt-2 text-red-600">
                     {errors?.description?.message}
@@ -118,17 +107,18 @@ function AddLocation() {
                     Photos
                 </label>
                 <input
+                    disabled={isLoading}
                     id="images"
                     type="file"
                     accept="image/*"
                     multiple
-                    /*{...register('images', {required: 'This field is required',})}*/
-                    className={`mt-2 h-7 w-full rounded border border-black px-3 ${imagesError ? 'border-red-600' : ''}`}
+                    {...register('images', {
+                        required: 'Add at least one image',
+                    })}
+                    className={`mt-2 h-7 w-full rounded border border-black px-3 ${errors?.images?.message ? 'border-red-600' : ''}`}
                     onChange={onChangeFiles}
                 />
-                <p className="mt-2 text-red-600">
-                    {imagesError ? imagesError : ''}
-                </p>
+                <p className="mt-2 text-red-600">{errors?.images?.message}</p>
                 <div className="mt-3 flex gap-2">
                     {images.map((image, index) => {
                         return (
@@ -138,17 +128,13 @@ function AddLocation() {
                                     alt=""
                                     className="w-full"
                                 />
-                                <div onClick={() => removeImage(index)}>
-                                    |X|
-                                </div>
                             </span>
                         )
                     })}
                 </div>
-                <p className="mt-2 text-red-600">{errors?.file?.message}</p>
             </div>
             <Button primary onSubmit={handleSubmit(onSubmit)}>
-                Add location
+                {isLoading ? 'Loading...' : 'Add location'}
             </Button>
         </form>
     )

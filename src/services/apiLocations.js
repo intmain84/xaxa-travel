@@ -1,5 +1,6 @@
 import supabase from './supabase'
 
+
 //GET MARKERS
 export async function getCoordinates() {
     const { data, error } = await supabase
@@ -37,16 +38,39 @@ export async function getLocation(id) {
 
 //CREATE LOCATION
 export async function createLocation(newLocation) {
-    const { data, error } = await supabase
+
+    const { images, ...location } = newLocation;
+
+    //1) CREATING IMAGE PATHS
+
+    //2) INSERT LOCATION AND GETTING ITS ID
+    const { data: locationFromDB, error: locationError } = await supabase
         .from('locations')
-        .insert([newLocation])
+        .insert([location])
         .select()
+    if (locationError) throw new Error(locationError.message)
+    const { locationId } = locationFromDB[0]
 
-    if (error) throw new Error(error.message)
+    //3) INSERTING IMAGES
+    const { error: imagesError } = await supabase
+        .from('images')
+        .insert([
+            { location_id: locationId, image_link: 'someValue' },
+            { location_id: locationId, image_link: 'someValue' },
+        ])
+        .select()
+    if (imagesError) {
+        throw new Error(imagesError.message)
 
-    const { id } = data[0]
+        return
+    }
 
-    return id
+    //4) UPLOADING IMAGES TI STORAGE
+    const { error: uploadError } = await supabase.storage.from('bucket_name').upload('file_path', file)
+    if (uploadError) throw new Error(uploadError.message)
+
+
+    // return id
 }
 
 //EDIT LOCATION
