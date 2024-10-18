@@ -1,5 +1,6 @@
 import supabase from './supabase'
 
+//GET MARKERS
 export async function getCoordinates() {
     const { data, error } = await supabase
         .from('locations')
@@ -10,6 +11,7 @@ export async function getCoordinates() {
     return data
 }
 
+//GET LOCATION
 export async function getLocation(id) {
     let { data, error } = await supabase
         .from('locations')
@@ -33,6 +35,7 @@ export async function getLocation(id) {
     return location
 }
 
+//CREATE LOCATION
 export async function createLocation(newLocation) {
     const { data, error } = await supabase
         .from('locations')
@@ -46,6 +49,7 @@ export async function createLocation(newLocation) {
     return id
 }
 
+//EDIT LOCATION
 export async function editLocation(newData) {
     const { id: sendId, ...sendData } = newData
     const { data, error } = await supabase

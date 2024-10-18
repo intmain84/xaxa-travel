@@ -14,6 +14,7 @@ function AddLocation() {
     //Get coordinates from url search params
     const [lat, lng] = useUrlPosition()
     const [images, setImages] = useState([])
+    const [imagesError, setImagesError] = useState(null)
 
     //HOOK FORM
     const {
@@ -41,10 +42,19 @@ function AddLocation() {
         console.log('FROM SUBMIT', data)
         console.log('IMAGES', images)
         if (images.length === 0) {
-            setValue('images', null)
+            setImagesError('Add at least one image')
+            return
         }
-        // data = { ...data, lat: Number(lat), lng: Number(lng) }
-        //createLocation(data)
+
+        const newImages = images.map((image) => image.file)
+
+        data = {
+            ...data,
+            lat: Number(lat),
+            lng: Number(lng),
+            images: newImages,
+        }
+        createLocation(data)
     }
 
     //Previewing images
@@ -58,8 +68,6 @@ function AddLocation() {
 
             setImages(() => newImages)
         }
-
-        console.log('FROM USESTATE', images)
     }
 
     //Removing images
@@ -81,7 +89,7 @@ function AddLocation() {
                     {...register('name', {
                         required: 'This field is required',
                     })}
-                    className={`mt-2 h-7 w-full rounded border border-black px-3 ${errors?.description?.message && 'border-red-600'}`}
+                    className={`mt-2 h-7 w-full rounded border border-black px-3 ${errors?.name?.message && 'border-red-600'}`}
                 />
                 <p className="mt-2 text-red-600">{errors?.name?.message}</p>
             </div>
@@ -114,14 +122,12 @@ function AddLocation() {
                     type="file"
                     accept="image/*"
                     multiple
-                    {...register('images', {
-                        required: 'This field is required',
-                    })}
-                    className={`mt-2 h-7 w-full rounded border border-black px-3 ${errors?.images?.message && 'border-red-600'}`}
+                    /*{...register('images', {required: 'This field is required',})}*/
+                    className={`mt-2 h-7 w-full rounded border border-black px-3 ${imagesError ? 'border-red-600' : ''}`}
                     onChange={onChangeFiles}
                 />
                 <p className="mt-2 text-red-600">
-                    {errors?.images?.message && 'Add at least one image'}
+                    {imagesError ? imagesError : ''}
                 </p>
                 <div className="mt-3 flex gap-2">
                     {images.map((image, index) => {
