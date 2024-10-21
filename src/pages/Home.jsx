@@ -3,12 +3,6 @@ import Button from '../components/Button'
 import { googleSignIn } from '../services/apiAuth'
 
 function Home() {
-    // const { data, refetch, error } = useQuery({
-    //     queryKey: ['user'],
-    //     queryFn: googleSignIn,
-    //     enabled: false,
-    // })
-
     const refetch = async () => {
         const data = await googleSignIn()
         console.log(data)

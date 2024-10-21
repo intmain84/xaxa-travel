@@ -1,16 +1,46 @@
-import { useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import SpinnerFull from '../components/SpinnerFull.jsx'
 import Button from '../components/Button.jsx'
 import useGetLocation from '../hooks/useGetLocation.js'
 import { useContext } from 'react'
 import { UserContext } from '../context/UserContext.jsx'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import {
+    createLocation as createLocationApi,
+    deleteLocationApi,
+} from '../services/apiLocations.js'
 
 function Location() {
+    const navigate = useNavigate()
+    const queryClient = useQueryClient()
+
     const { id } = useParams()
 
     const { isLoggedIn } = useContext(UserContext)
 
     const { data: location, isPending, error } = useGetLocation(id)
+
+    //MUTATION
+    const { mutate: deleteLocation, isPending: isPendingDelete } = useMutation({
+        mutationFn: deleteLocationApi,
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: ['userLocations'],
+            })
+            queryClient.invalidateQueries({
+                queryKey: ['coord'],
+            })
+            navigate('/profile')
+        },
+        onError: (error) => {
+            console.log(error)
+            //Отработать тут ошибки
+        },
+    })
+
+    function handleDeleteLocation() {
+        deleteLocation(id)
+    }
 
     //ERROR
     if (error && !isPending) return <div>{error.message}</div>
@@ -23,6 +53,9 @@ function Location() {
         return (
             <>
                 <div className="flex gap-3">
+                    <div>
+                        <Link to="/profile">Назад</Link>
+                    </div>
                     {location.images.length > 0 &&
                         location.images.map((image) => (
                             <img
@@ -44,9 +77,12 @@ function Location() {
                     <span>{location.profiles.full_name}</span>
                 </div>
                 {isLoggedIn === location.user_id && (
-                    <Button secondary to={`/location/${id}/edit`}>
-                        Edit
-                    </Button>
+                    <>
+                        <Button secondary to={`/location/${id}/edit`}>
+                            Edit
+                        </Button>
+                        <Button onClick={handleDeleteLocation}>Delete</Button>
+                    </>
                 )}
             </>
         )

@@ -8,7 +8,6 @@ import { useState } from 'react'
 import { useContext } from 'react'
 import { UserContext } from '../context/UserContext.jsx'
 
-
 function AddLocation() {
     const { isLoggedIn } = useContext(UserContext)
     const queryClient = useQueryClient()
@@ -28,14 +27,18 @@ function AddLocation() {
 
     //MUTATION
     const {
-        data: id,
+        data,
         mutate: createLocation,
         isLoading,
     } = useMutation({
         mutationFn: createLocationApi,
-        onSuccess: () => {
+        onSuccess: (data) => {
             queryClient.invalidateQueries({ queryKey: ['coord'] })
-            navigate(`/location/${id}?lat=${lat}&lng=${lng}`)
+            navigate(`/location/${data}?lat=${lat}&lng=${lng}`)
+        },
+        onError: (error) => {
+            console.log('Error')
+            //Отработать тут ошибки
         },
     })
 
@@ -45,7 +48,7 @@ function AddLocation() {
             ...data,
             lat: Number(lat),
             lng: Number(lng),
-            user_id: isLoggedIn
+            user_id: isLoggedIn,
         }
         createLocation(data)
     }
