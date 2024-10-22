@@ -37,7 +37,7 @@ function AddLocation() {
             navigate(`/location/${data}?lat=${lat}&lng=${lng}`)
         },
         onError: (error) => {
-            console.log('Error')
+            console.log(error)
             //Отработать тут ошибки
         },
     })

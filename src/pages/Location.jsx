@@ -39,7 +39,11 @@ function Location() {
     })
 
     function handleDeleteLocation() {
-        deleteLocation(id)
+        const data = {
+            id,
+            images: location.images
+        }
+        deleteLocation(data)
     }
 
     //ERROR
