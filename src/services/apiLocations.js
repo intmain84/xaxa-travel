@@ -48,7 +48,7 @@ export async function getUserLocations(user_id) {
     if (data.length === 0)
         throw new Error("You haven't added any locations yet")
 
-    if (error) throw new Error(error.message)
+    if (error) throw new Error('error.message')
 
     return data
 }
@@ -57,55 +57,71 @@ export async function getUserLocations(user_id) {
 export async function createLocation(newLocation) {
     const { images, ...location } = newLocation
 
+    //1) INSERT LOCATION AND GETTING ITS ID
+    const { data: locationFromDB, error: locationError } = await supabase
+        .from('locations')
+        .insert([location])
+        .select()
 
-        //1) INSERT LOCATION AND GETTING ITS ID
-        const { data: locationFromDB, error: locationError } = await supabase
+    if (locationError)
+        throw new Error('Location could not be created. Try again')
+
+    const { id: locationId } = locationFromDB[0]
+
+    //2) CREATING IMAGE PATHS
+    let imagesData = []
+    Array.from(images).forEach((file) => {
+        const name = file.name.replace(/[\/ _]/g, '')
+        imagesData.push({
+            imageName: name,
+            path: `${supabaseUrl}/storage/v1/object/public/locations/${name}`,
+            file,
+        })
+    })
+
+    //3) INSERTING IMAGES
+    let imageRows = []
+    imagesData.forEach((data) => {
+        imageRows.push({
+            location_id: locationId,
+            image_link: data.path,
+        })
+    })
+
+    const { error: imagesError } = await supabase
+        .from('images')
+        .insert(imageRows)
+        .select()
+    if (imagesError) {
+        //Delete records from locations and images tables
+        const { error: locationDeleteError } = await supabase
             .from('locations')
-            .insert([location])
-            .select()
+            .delete()
+            .eq('id', locationId)
+        if (locationDeleteError)
+            throw new Error('Location could not be deleted. Try again')
 
-        if (locationError) throw new Error('Location could not be created. Try again')
+        throw new Error('Location could not be created. Try again')
+    }
 
-        const { id: locationId } = locationFromDB[0]
+    // //4) UPLOADING IMAGES TI STORAGE
+    for (const image of imagesData) {
+        let { error: storageError } = await supabase.storage
+            .from('locations')
+            .upload(image.imageName, image.file)
+        if (storageError) {
+            //Delete records from locations and images tables
+            const { error: locationDeleteError } = await supabase
+                .from('locations')
+                .delete()
+                .eq('id', locationId)
+            if (locationDeleteError)
+                throw new Error('Location could not be deleted. Try again')
 
-        //2) CREATING IMAGE PATHS
-        let imagesData = []
-        Array.from(images).forEach((file) => {
-            const name = file.name.replace(/[\/ _]/g, '');
-            imagesData.push({
-                imageName: name,
-                path: `${supabaseUrl}/storage/v1/object/public/locations/${name}`,
-                file,
-            })
-        })
-
-        //3) INSERTING IMAGES
-        let imageRows = []
-        imagesData.forEach((data) => {
-            imageRows.push({
-                location_id: locationId,
-                image_link: data.path,
-            })
-        })
-
-        const { error: imagesError } = await supabase
-            .from('images')
-            .insert(imageRows)
-            .select()
-        if (imagesError) {
             throw new Error('Location could not be created. Try again')
         }
-
-        // //4) UPLOADING IMAGES TI STORAGE
-        for (const image of imagesData) {
-            let { error: storageError } = await supabase.storage
-                .from('locations')
-                .upload(image.imageName, image.file)
-            if (storageError) {
-                throw new Error('Location could not be created. Try again')
-            }
-        }
-        return locationId
+    }
+    return locationId
 }
 
 //EDIT LOCATION
@@ -119,24 +135,29 @@ export async function editLocation(newData) {
 
     if (error) throw new Error(error.message)
 
-    const { id } = data[0]
-
-    return id
+    return data[0]
 }
 
 //DELETE LOCATION
 export async function deleteLocationApi(location) {
     const { id, images } = location
+
     //Filling array with file names (e.g. ['image1.jpg', 'image2.png'])
     const imageNames = images.map((image) => image.image_link.split('/').pop())
 
     //Delete images from storage
-    const { error: storageError } = await supabase.storage.from('locations').remove(imageNames)
+    const { error: storageError } = await supabase.storage
+        .from('locations')
+        .remove(imageNames)
     if (storageError) {
         throw new Error('Location could not be deleted. Try again')
-    } else {
-        //Delete records from locations and images tables
-        const { error: locationDeleteError } = await supabase.from('locations').delete().eq('id', id)
-        if (locationDeleteError) throw new Error('Location could not be deleted. Try again')
     }
+
+    //Delete records from locations and images tables
+    const { error: locationDeleteError } = await supabase
+        .from('locations')
+        .delete()
+        .eq('id', id)
+    if (locationDeleteError)
+        throw new Error('Location could not be deleted. Try again')
 }
