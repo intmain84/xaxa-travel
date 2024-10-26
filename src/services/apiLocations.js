@@ -70,6 +70,7 @@ export async function createLocation(newLocation) {
 
     const { id: locationId } = locationFromDB[0]
 
+    // TODO to make generated unique images names
     //2) CREATING IMAGE PATHS
     let imagesData = []
     Array.from(images).forEach((file) => {
