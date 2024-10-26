@@ -64,7 +64,9 @@ export async function createLocation(newLocation) {
         .select()
 
     if (locationError)
-        throw new Error('Location could not be created. Try again')
+        throw new Error(
+            '(insert locations) Location could not be created. Try again'
+        )
 
     const { id: locationId } = locationFromDB[0]
 
@@ -93,32 +95,20 @@ export async function createLocation(newLocation) {
         .insert(imageRows)
         .select()
     if (imagesError) {
-        //Delete records from locations and images tables
-        const { error: locationDeleteError } = await supabase
-            .from('locations')
-            .delete()
-            .eq('id', locationId)
-        if (locationDeleteError)
-            throw new Error('Location could not be deleted. Try again')
-
-        throw new Error('Location could not be created. Try again')
+        throw new Error(
+            '(insert images) Location could not be created. Try again'
+        )
     }
 
-    // //4) UPLOADING IMAGES TI STORAGE
+    // //4) UPLOADING IMAGES TO STORAGE
     for (const image of imagesData) {
         let { error: storageError } = await supabase.storage
             .from('locations')
             .upload(image.imageName, image.file)
         if (storageError) {
-            //Delete records from locations and images tables
-            const { error: locationDeleteError } = await supabase
-                .from('locations')
-                .delete()
-                .eq('id', locationId)
-            if (locationDeleteError)
-                throw new Error('Location could not be deleted. Try again')
-
-            throw new Error('Location could not be created. Try again')
+            throw new Error(
+                '(Upload images) Location could not be created. Try again'
+            )
         }
     }
     return locationId
