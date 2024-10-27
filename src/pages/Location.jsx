@@ -36,6 +36,7 @@ function Location() {
     if (!isPending && !error) {
         return (
             <>
+                <h1>{location.name}</h1>
                 <div className="flex gap-3">
                     <div>
                         <div onClick={() => navigate(-1)}>Назад</div>
@@ -50,7 +51,7 @@ function Location() {
                             />
                         ))}
                 </div>
-                <div>Location: {location.name}</div>
+
                 <div>Description: {location.description}</div>
                 <div className="flex items-center gap-3">
                     <img
@@ -62,7 +63,10 @@ function Location() {
                 </div>
                 {isLoggedIn === location.user_id && (
                     <>
-                        <Button secondary to={`/location/${id}/edit`}>
+                        <Button
+                            secondary
+                            to={`/location/edit/${id}?lat=${location.lat}&lng=${location.lng}`}
+                        >
                             Edit
                         </Button>
                         <Button onClick={handleDeleteLocation}>Delete</Button>

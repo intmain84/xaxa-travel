@@ -18,6 +18,8 @@ function AddLocation() {
 
     //Get coordinates from url search params
     const [lat, lng] = useUrlPosition()
+
+    //Images data
     const [images, setImages] = useState([])
     const [imgRequiredError, setImgRequiredError] = useState(false)
     const [isFileSizeError, setIsFileSizeError] = useState(false)
@@ -101,7 +103,7 @@ function AddLocation() {
 
     return (
         <>
-            <div onClick={() => navigate(-1)}>Back</div>
+            <h1>Adding location</h1>
             <form onSubmit={handleSubmit(onSubmit)}>
                 {/* NAME */}
                 <div className="mb-4">

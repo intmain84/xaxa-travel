@@ -6,15 +6,19 @@ import {
     getLocation,
 } from '../services/apiLocations'
 import { useNavigate, useParams } from 'react-router-dom'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+
+const showFileSize = (fileSize) => Math.round(fileSize / 1024)
 
 function EditLocation() {
     const queryClient = useQueryClient()
     const { id } = useParams()
     const navigate = useNavigate()
-    let sumFiles = 0
 
+    //Images data
     const [images, setImages] = useState([])
+    const [imgRequiredError, setImgRequiredError] = useState(false)
+    const [isFileSizeError, setIsFileSizeError] = useState(false)
 
     const {
         data: oldData,
@@ -47,33 +51,64 @@ function EditLocation() {
         },
     })
 
+    //Calling API function
     const onSubmit = (data) => {
-        editLocation({ ...data, id })
+        if (images.length === 0) {
+            setImgRequiredError(true)
+            return
+        }
+        if (isFileSizeError) return
+
+        const newImages = images.map((image) => image.file)
+
+        data = {
+            ...data,
+            images: newImages,
+            id,
+        }
+        editLocation(data)
     }
 
     //Previewing images
     const onChangeFiles = (e) => {
+        setImgRequiredError(false)
         if (e.target.files.length > 0) {
-            const images = Array.from(e.target.files)
-            const newImages = images.map((file) => ({
+            const files = Array.from(e.target.files)
+            const newImages = files.map((file) => ({
                 file,
                 preview: URL.createObjectURL(file),
             }))
 
-            setImages(() => newImages)
+            setImages([...images, ...newImages])
         }
     }
 
-    if (!isGettingData) {
-        sumFiles = oldData.images.length + images.length
-        console.log(sumFiles)
+    //Deleting images
+    const removeImage = (index) => {
+        const newImages = images.filter(
+            (image) => images.indexOf(image) !== index
+        )
+        setImages(newImages)
     }
+
+    //CHECKING IF ANY IMAGE EXCEEDS MAX SIZE
+    useEffect(() => {
+        // TODO MUST USE ARRAY.SOME() INSTEAD OF FOREACH BECAUSE NOW THE LAST IMAGE IN THE CYCLE MIGHT BE FALSE EVEN THOUGH PREVIOUS IMAGE WAS TRUE
+        images.forEach((image) => {
+            if (Math.round(image.file.size / 1024) > 1024) {
+                setIsFileSizeError(true)
+            } else {
+                setIsFileSizeError(false)
+            }
+        })
+    }, [images])
 
     if (isUpdatingData || isGettingData) return <div>LoADinG...</div>
 
     if (!isUpdatingData || !isGettingData)
         return (
             <>
+                <h1>Editing location</h1>
                 <div className="flex gap-3">
                     {oldData.images.length > 0 &&
                         oldData.images.map((image) => (
@@ -133,22 +168,37 @@ function EditLocation() {
                             type="file"
                             accept="image/*"
                             multiple
-                            {...register('images')}
-                            className={`mt-2 h-7 w-full rounded border border-black px-3 ${errors?.images?.message ? 'border-red-600' : ''}`}
+                            className={`mt-2 h-7 w-full rounded border border-black px-3 ${imgRequiredError || isFileSizeError ? 'border-red-600' : ''}`}
                             onChange={onChangeFiles}
                         />
                         <p className="mt-2 text-red-600">
-                            {errors?.images?.message}
+                            {imgRequiredError && 'Up to 5 images required'}
+                            {isFileSizeError &&
+                                'Each image must be less than 1mb'}
                         </p>
-                        <div className="mt-3 flex gap-2">
+                        <div className="mt-3 flex flex-col gap-2">
                             {images.map((image, index) => {
                                 return (
-                                    <span key={index} className="w-14">
+                                    <span
+                                        key={index}
+                                        className="relative flex gap-3"
+                                    >
                                         <img
                                             src={image.preview}
                                             alt=""
-                                            className="w-full"
+                                            className="aspect-video w-7 object-cover"
                                         />
+                                        <div
+                                            className={`${showFileSize(image.file.size) > 1024 ? 'font-semibold text-red-600' : ''}`}
+                                        >
+                                            Size:{' '}
+                                            {showFileSize(image.file.size)}Kb
+                                        </div>
+                                        <button
+                                            onClick={() => removeImage(index)}
+                                        >
+                                            X
+                                        </button>
                                     </span>
                                 )
                             })}
@@ -156,12 +206,10 @@ function EditLocation() {
                     </div>
 
                     <div className="flex gap-3">
-                        {sumFiles <= 5 && (
-                            <Button primary onSubmit={handleSubmit(onSubmit)}>
-                                Add location
-                            </Button>
-                        )}
-                        <Button secondary onSubmit={() => navigate(-1)}>
+                        <Button primary onSubmit={handleSubmit(onSubmit)}>
+                            Add location
+                        </Button>
+                        <Button secondary onClick={() => navigate('/profile')}>
                             Cancel
                         </Button>
                     </div>

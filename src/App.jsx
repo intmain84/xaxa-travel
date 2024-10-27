@@ -18,7 +18,6 @@ import ProtectedHomeRoute from './components/ProtectedHomeRoute'
 import { UserProvider } from './context/UserContext'
 import ProtectedPublicRoute from './components/ProtectedPublicRoute.jsx'
 
-
 function App() {
     return (
         <QueryClientProvider client={queryClient}>
@@ -48,7 +47,7 @@ function App() {
                                     }
                                 ></Route>
                                 <Route
-                                    path="location/:id/edit"
+                                    path="location/edit/:id"
                                     element={
                                         <ProtectedAllRoutes>
                                             <EditLocation />
@@ -68,9 +67,10 @@ function App() {
                                 <Route
                                     path="location/:id"
                                     element={
-                                    <ProtectedPublicRoute>
-                                        <Location />
-                                    </ProtectedPublicRoute>}
+                                        <ProtectedPublicRoute>
+                                            <Location />
+                                        </ProtectedPublicRoute>
+                                    }
                                 ></Route>
                                 <Route path="*" element={<NoMatch />} />
                             </Route>
