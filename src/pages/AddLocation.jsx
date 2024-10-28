@@ -92,13 +92,16 @@ function AddLocation() {
 
     //CHECKING IF ANY IMAGE EXCEEDS MAX SIZE
     useEffect(() => {
-        images.forEach((image) => {
-            if (Math.round(image.file.size / 1024) > 1024) {
-                setIsFileSizeError(true)
-            } else {
-                setIsFileSizeError(false)
-            }
-        })
+        // TODO MUST USE ARRAY.SOME() INSTEAD OF FOREACH BECAUSE NOW THE LAST IMAGE IN THE CYCLE MIGHT BE FALSE EVEN THOUGH PREVIOUS IMAGE WAS TRUE
+
+        const ifSizeExceed = images.some(
+            (image) => Math.round(image.file.size / 1024) > 1024
+        )
+        if (ifSizeExceed) {
+            setIsFileSizeError(true)
+        } else {
+            setIsFileSizeError(false)
+        }
     }, [images])
 
     return (
