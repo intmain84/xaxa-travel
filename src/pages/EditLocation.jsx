@@ -7,6 +7,7 @@ import {
 } from '../services/apiLocations'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
+import usePreviewFiles from '../hooks/usePreviewFiles.js'
 
 const showFileSize = (fileSize) => Math.round(fileSize / 1024)
 
@@ -35,6 +36,8 @@ function EditLocation() {
         formState: { errors },
     } = useForm()
 
+    // TODO TO PUT THE CODE BELOW A CUSTOM HOOK (SIMILAR TO ADDLOCATION)
+    //MUTATION
     const {
         data,
         mutate: editLocation,
@@ -50,6 +53,8 @@ function EditLocation() {
             console.log(errorEdit)
         },
     })
+
+    const { mutate } = useAddEditLocation(lat, lng)
 
     //Calling API function
     const onSubmit = (data) => {
@@ -69,39 +74,12 @@ function EditLocation() {
         editLocation(data)
     }
 
-    //Previewing images
-    const onChangeFiles = (e) => {
-        setImgRequiredError(false)
-        if (e.target.files.length > 0) {
-            const files = Array.from(e.target.files)
-            const newImages = files.map((file) => ({
-                file,
-                preview: URL.createObjectURL(file),
-            }))
-
-            setImages([...images, ...newImages])
-        }
-    }
-
-    //Deleting images
-    const removeImage = (index) => {
-        const newImages = images.filter(
-            (image) => images.indexOf(image) !== index
-        )
-        setImages(newImages)
-    }
-
-    //CHECKING IF ANY IMAGE EXCEEDS MAX SIZE
-    useEffect(() => {
-        const ifSizeExceed = images.some(
-            (image) => Math.round(image.file.size / 1024) > 1024
-        )
-        if (ifSizeExceed) {
-            setIsFileSizeError(true)
-        } else {
-            setIsFileSizeError(false)
-        }
-    }, [images])
+    const { onChangeFiles, removeImage } = usePreviewFiles(
+        images,
+        setImages,
+        setImgRequiredError,
+        setIsFileSizeError
+    )
 
     if (isUpdatingData || isGettingData) return <div>LoADinG...</div>
 

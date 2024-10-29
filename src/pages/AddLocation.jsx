@@ -4,9 +4,10 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { createLocation as createLocationApi } from '../services/apiLocations'
 import { useNavigate } from 'react-router-dom'
 import useUrlPosition from '../hooks/useUrlPosition'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useContext } from 'react'
 import { UserContext } from '../context/UserContext.jsx'
+import usePreviewFiles from '../hooks/usePreviewFiles.js'
 
 const showFileSize = (fileSize) => Math.round(fileSize / 1024)
 
@@ -31,6 +32,7 @@ function AddLocation() {
         formState: { errors },
     } = useForm()
 
+    // TODO TO PUT THE CODE BELOW A CUSTOM HOOK (SIMILAR TO EDITLOCATION)
     //MUTATION
     const {
         data,
@@ -50,11 +52,7 @@ function AddLocation() {
 
     //Calling API function
     const onSubmit = (data) => {
-        if (images.length === 0) {
-            setImgRequiredError(true)
-            return
-        }
-        if (isFileSizeError) return
+        if (imgRequiredError || isFileSizeError) return
 
         const newImages = images.map((image) => image.file)
 
@@ -68,41 +66,12 @@ function AddLocation() {
         createLocation(data)
     }
 
-    //Previewing images
-    const onChangeFiles = (e) => {
-        setImgRequiredError(false)
-        if (e.target.files.length > 0) {
-            const files = Array.from(e.target.files)
-            const newImages = files.map((file) => ({
-                file,
-                preview: URL.createObjectURL(file),
-            }))
-
-            setImages([...images, ...newImages])
-        }
-    }
-
-    //Deleting images
-    const removeImage = (index) => {
-        const newImages = images.filter(
-            (image) => images.indexOf(image) !== index
-        )
-        setImages(newImages)
-    }
-
-    //CHECKING IF ANY IMAGE EXCEEDS MAX SIZE
-    useEffect(() => {
-        // TODO MUST USE ARRAY.SOME() INSTEAD OF FOREACH BECAUSE NOW THE LAST IMAGE IN THE CYCLE MIGHT BE FALSE EVEN THOUGH PREVIOUS IMAGE WAS TRUE
-
-        const ifSizeExceed = images.some(
-            (image) => Math.round(image.file.size / 1024) > 1024
-        )
-        if (ifSizeExceed) {
-            setIsFileSizeError(true)
-        } else {
-            setIsFileSizeError(false)
-        }
-    }, [images])
+    const { onChangeFiles, removeImage } = usePreviewFiles(
+        images,
+        setImages,
+        setImgRequiredError,
+        setIsFileSizeError
+    )
 
     return (
         <>
@@ -155,13 +124,19 @@ function AddLocation() {
                         type="file"
                         accept="image/*"
                         multiple
-                        className={`mt-2 h-7 w-full rounded border border-black px-3 ${imgRequiredError ? 'border-red-600' : ''}`}
+                        className={`mt-2 h-7 w-full rounded border border-black px-3 ${imgRequiredError || isFileSizeError ? 'border-red-600' : ''}`}
                         onChange={onChangeFiles}
                     />
-                    <p className="mt-2 text-red-600">
-                        {imgRequiredError && 'Up to 5 images required'}
-                        {isFileSizeError && 'Each image must be less than 1mb'}
-                    </p>
+                    {imgRequiredError && (
+                        <p className="mt-2 text-red-600">
+                            Up to 5 images required
+                        </p>
+                    )}
+                    {isFileSizeError && (
+                        <p className="mt-2 text-red-600">
+                            Each image must be less than 1mb
+                        </p>
+                    )}
                     <div className="mt-3 flex flex-col gap-2">
                         {images.map((image, index) => {
                             return (
@@ -179,19 +154,15 @@ function AddLocation() {
                                     >
                                         Size: {showFileSize(image.file.size)}Kb
                                     </div>
-                                    <button onClick={() => removeImage(index)}>
+                                    <span onClick={() => removeImage(index)}>
                                         X
-                                    </button>
+                                    </span>
                                 </span>
                             )
                         })}
                     </div>
                 </div>
-                <Button
-                    disabled={isFileSizeError}
-                    primary
-                    onSubmit={handleSubmit(onSubmit)}
-                >
+                <Button primary onSubmit={handleSubmit(onSubmit)}>
                     {isLoading ? 'Loading...' : 'Add location'}
                 </Button>
             </form>
