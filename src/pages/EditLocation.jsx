@@ -54,8 +54,6 @@ function EditLocation() {
         },
     })
 
-    const { mutate } = useAddEditLocation(lat, lng)
-
     //Calling API function
     const onSubmit = (data) => {
         if (images.length === 0) {
