@@ -2,15 +2,11 @@ import supabase from './supabase'
 import useGetSession from '../hooks/useGetSession.jsx'
 
 export async function googleSignIn() {
-    const { data, error } = await supabase.auth.signInWithOAuth({
+    const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
     })
 
-    if (error) throw new Error(error.message)
-
-    const { provider } = data
-
-    return provider
+    return error
 }
 
 export async function getCurrentUser() {

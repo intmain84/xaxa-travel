@@ -1,4 +1,3 @@
-import useGetUserLocations from './useGetUserLocations.js'
 import supabase from '../services/supabase.js'
 
 async function useGetSession() {

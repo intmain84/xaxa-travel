@@ -3,7 +3,7 @@ import Header from './Header'
 
 function Sidebar() {
     return (
-        <main className="relative grid grid-rows-[auto_auto] p-5">
+        <main className="relative overflow-y-scroll">
             <Header />
             <Outlet />
         </main>

@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import SpinnerFull from '../components/SpinnerFull.jsx'
 import Button from '../components/Button.jsx'
 import useGetLocation from '../hooks/useGetLocation.js'
@@ -8,7 +8,6 @@ import useDeleteLocation from '../hooks/useDeleteLocation.jsx'
 
 function Location() {
     const { id } = useParams()
-    const navigate = useNavigate()
 
     const { isLoggedIn } = useContext(UserContext)
 
@@ -38,9 +37,6 @@ function Location() {
             <>
                 <h1>{location.name}</h1>
                 <div className="flex gap-3">
-                    <div>
-                        <div onClick={() => navigate(-1)}>Назад</div>
-                    </div>
                     {location.images.length > 0 &&
                         location.images.map((image) => (
                             <img

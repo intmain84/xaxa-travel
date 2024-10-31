@@ -4,10 +4,12 @@ const usePreviewFiles = (
     images,
     setImages,
     setImgRequiredError,
-    setIsFileSizeError
+    setIsFileSizeError,
+    edit = false,
+    oldData,
+    readyToRemove
 ) => {
     const onChangeFiles = (e) => {
-        setImgRequiredError(false)
         if (e.target.files.length > 0) {
             const files = Array.from(e.target.files)
             const newImages = files.map((file) => ({
@@ -31,8 +33,27 @@ const usePreviewFiles = (
         setIsFileSizeError(ifSizeExceed)
 
         // Check if image quantity exceeded
-        setImgRequiredError(images.length > 5)
-    }, [images, setImgRequiredError, setIsFileSizeError])
+        if (edit) {
+            //If edit === 'edit'
+            setImgRequiredError(
+                oldData?.images.length - readyToRemove.length + images.length >
+                    5 ||
+                    oldData?.images.length -
+                        readyToRemove.length +
+                        images.length ===
+                        0
+            )
+        } else {
+            setImgRequiredError(images.length > 5 || images.length === 0)
+        }
+    }, [
+        images,
+        edit,
+        oldData,
+        readyToRemove,
+        setImgRequiredError,
+        setIsFileSizeError,
+    ])
 
     return { onChangeFiles, removeImage }
 }

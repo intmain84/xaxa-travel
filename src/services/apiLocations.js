@@ -1,4 +1,6 @@
-import supabase, { supabaseUrl } from './supabase'
+import supabase from './supabase'
+import createImagesData from '../utilities/createImagesData.js'
+import createImagesRows from '../utilities/createImagesRows.js'
 
 //GET MARKERS
 export async function getCoordinates() {
@@ -6,7 +8,7 @@ export async function getCoordinates() {
         .from('locations')
         .select('id, name, lat, lng')
 
-    if (error) console.log(error)
+    if (error) console.log(error.message)
 
     return data
 }
@@ -70,26 +72,11 @@ export async function createLocation(newLocation) {
 
     const { id: locationId } = locationFromDB[0]
 
-    // TODO to make generated unique images names
     //2) CREATING IMAGE PATHS
-    let imagesData = []
-    Array.from(images).forEach((file) => {
-        const name = file.name.replace(/[\/ _]/g, '')
-        imagesData.push({
-            imageName: name,
-            path: `${supabaseUrl}/storage/v1/object/public/locations/${name}`,
-            file,
-        })
-    })
+    const imagesData = createImagesData(images)
 
     //3) INSERTING IMAGES
-    let imageRows = []
-    imagesData.forEach((data) => {
-        imageRows.push({
-            location_id: locationId,
-            image_link: data.path,
-        })
-    })
+    const imageRows = createImagesRows(imagesData, locationId)
 
     const { error: imagesError } = await supabase
         .from('images')
@@ -101,7 +88,7 @@ export async function createLocation(newLocation) {
         )
     }
 
-    // //4) UPLOADING IMAGES TO STORAGE
+    //4) UPLOADING IMAGES TO STORAGE
     for (const image of imagesData) {
         let { error: storageError } = await supabase.storage
             .from('locations')
@@ -117,16 +104,76 @@ export async function createLocation(newLocation) {
 
 //EDIT LOCATION
 export async function editLocation(newData) {
-    const { id: sendId, ...sendData } = newData
-    const { data, error } = await supabase
+    const { id: locationId, images, readyToRemove, ...sendData } = newData
+    const { error: locationError } = await supabase
         .from('locations')
         .update(sendData)
-        .eq('id', sendId)
-        .select()
+        .eq('id', locationId)
 
-    if (error) throw new Error(error.message)
+    if (locationError)
+        throw new Error(
+            '(edit locations) Location could not be edited. Try again'
+        )
 
-    return data[0]
+    // IF THERE'S ANY NEW IMAGE TO UPLOAD
+    if (images.length > 0) {
+        //2) CREATING IMAGE PATHS
+        const imagesData = createImagesData(images)
+
+        //3) INSERTING IMAGES
+        const imageRows = createImagesRows(imagesData, locationId)
+
+        const { error: imagesError } = await supabase
+            .from('images')
+            .insert(imageRows)
+            .select()
+        if (imagesError) {
+            throw new Error(
+                '(edit images) Images cant be inserted to table. Try again'
+            )
+        }
+
+        //4) UPLOADING IMAGES TO STORAGE
+        for (const image of imagesData) {
+            let { error: storageError } = await supabase.storage
+                .from('locations')
+                .upload(image.imageName, image.file)
+            if (storageError) {
+                throw new Error(
+                    '(Upload images) Location could not be created. Try again'
+                )
+            }
+        }
+    }
+
+    // IF THERE'S ANY IMAGE TO DELETE
+    if (readyToRemove.length > 0) {
+        //Filling array with file names (e.g. ['image1.jpg', 'image2.png'])
+        const imageNames = readyToRemove.map((image) =>
+            image.image_link.split('/').pop()
+        )
+
+        //Delete images from storage
+        const { error: storageError } = await supabase.storage
+            .from('locations')
+            .remove(imageNames)
+        if (storageError) {
+            throw new Error('ERROR delete from storage. Try again')
+        }
+
+        //Filling array with file IDs (e.g. [1, 2, 3])
+        const imageIds = readyToRemove.map((image) => image.id)
+
+        //Delete records from images tables
+        const { error: errorDeleteImagesRows } = await supabase
+            .from('images')
+            .delete()
+            .in('id', imageIds)
+        if (errorDeleteImagesRows)
+            throw new Error(errorDeleteImagesRows.message)
+    }
+
+    return locationId
 }
 
 //DELETE LOCATION
