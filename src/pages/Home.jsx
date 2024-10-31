@@ -8,7 +8,7 @@ function Home() {
     const signIn = async () => {
         const error = await googleSignIn()
 
-        setSignInError(error)
+        setSignInError(!!error)
     }
 
     // TODO PROCESS ERROR CASE!
