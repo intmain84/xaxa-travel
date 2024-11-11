@@ -10,7 +10,7 @@ function Button({
     onClick = null,
 }) {
     //TODO disabled style
-    const styles = `${primary ? 'bg-green-500 text-white hover:text-white hover:bg-green-700' : ''} ${secondary ? 'bg-transparent text-green-500 border border-green-500 hover:text-white hover:bg-green-700 hover:border-green-700' : ''} ${width ? width : ''} flex flex-col h-7 justify-center rounded px-4 no-underline text-center transition-all duration-300`
+    const styles = `${primary ? 'bg-teal-600 text-white hover:text-white hover:bg-teal-700' : ''} ${secondary ? 'bg-transparent text-green-500 border border-green-500 hover:text-white hover:bg-green-700 hover:border-green-700' : ''} ${width ? width : ''} flex flex-col h-7 justify-center items-center rounded px-4 no-underline text-center transition-all duration-300`
     if (to) {
         return (
             <Link className={styles} to={to}>

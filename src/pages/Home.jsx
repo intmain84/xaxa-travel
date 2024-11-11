@@ -15,21 +15,16 @@ function Home() {
     if (signInError) return <div>SIGN IN ERROR</div>
     if (!signInError)
         return (
-            <div className="h-shv flex flex-col items-center">
-                <div>
-                    <h1 className="text-center">
-                        Put every piece of journeys on the map!
-                    </h1>
-                    <p className="mt-4 text-center text-lg">
+            <div className="flex h-[calc(100%-72px-56px)] flex-col justify-center">
+                <div className="h-shv mx-4 flex flex-col items-center gap-5 p-5 text-center">
+                    <h1 className="text-center">Fly High, Map Far!</h1>
+                    <p className="text-center text-lg">
                         Discover new places with fellow travelers and share your
                         own on the map. You need to login to add locations
                     </p>
-
-                    <div className="mt-5 flex w-full gap-3">
-                        <Button secondary width="flex-1" onClick={signIn}>
-                            Login
-                        </Button>
-                    </div>
+                    <Button primary width="w-full" onClick={signIn}>
+                        Sign In
+                    </Button>
                 </div>
             </div>
         )

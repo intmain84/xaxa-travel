@@ -46,7 +46,7 @@ function Map() {
     }, [position])
 
     return (
-        <div className="map-container">
+        <div className="rounded-r-2xl overflow-hidden">
             <MapContainer center={mapPosition} zoom={11}>
                 <TileLayer url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png" />
                 {!isFetching &&

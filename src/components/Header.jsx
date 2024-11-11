@@ -16,8 +16,8 @@ function Header() {
     }
 
     return (
-        <header className="mb-8 flex justify-center text-xl">
-            <Link to="/" className="block w-[200px]">
+        <header className="mt-6 flex justify-center text-xl px-4">
+            <Link to="/" className="">
                 <Logo />
             </Link>
 
