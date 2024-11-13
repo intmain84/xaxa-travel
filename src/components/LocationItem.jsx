@@ -1,47 +1,25 @@
 import { showDateTime } from '../utilities/formatDateTime.js'
 import { Link } from 'react-router-dom'
-import { useState } from 'react'
-import useDeleteLocation from '../hooks/useDeleteLocation.jsx'
 
 function LocationItem({ location }) {
-    const [isMenuOpened, setIsMenuOpened] = useState(false)
-
-    //MUTATION
-    const { deleteLocation, isPendingDelete, errorDelete } = useDeleteLocation()
-
-    function handleDeleteLocation() {
-        const data = {
-            id: location.id,
-            images: location.images,
-        }
-        deleteLocation(data)
-    }
-
     return (
-        <div>
-            <Link
-                to={`/location/${location.id}?lat=${location.lat}&lng=${location.lng}`}
-            >
+        <Link
+            className="bg-light-green hover:bg-toxic-green hover:text-dark-green rounded-lg p-5 transition-all duration-300"
+            to={`/location/${location.id}?lat=${location.lat}&lng=${location.lng}`}
+        >
+            <div className="flex gap-4">
                 <img
                     src={location.images[0].image_link}
                     alt=""
-                    className="aspect-video w-15 object-cover"
+                    className="aspect-square w-12 rounded-sm object-cover"
                 />
-                <div>Loc name: {location.name}</div>
-                <div>Loc description: {location.description}</div>
-                <div>Created: {showDateTime(location.created_at)}</div>
-            </Link>
-
-            <div className="relative">
-                <div onClick={() => setIsMenuOpened((prev) => !prev)}>—</div>
-                {isMenuOpened && (
-                    <div className="absolute flex flex-col bg-amber-200 p-3">
-                        <div onClick={handleDeleteLocation}>Delete</div>
-                        <div>Hide</div>
-                    </div>
-                )}
+                <div className="flex flex-col">
+                    <h3>{location.name}</h3>
+                    <span>{showDateTime(location.created_at)}</span>
+                </div>
             </div>
-        </div>
+            <p className="mt-4 line-clamp-3">{location.description}</p>
+        </Link>
     )
 }
 

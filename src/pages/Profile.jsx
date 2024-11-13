@@ -11,7 +11,8 @@ function Profile() {
     if (!error && isPending) return <div>Loading...</div>
     if (!error && !isPending)
         return (
-            <div className="flex flex-col gap-5">
+            <div className="mx-4 flex flex-col gap-3">
+                <h1 className="mb-3 mt-9">Your locations</h1>
                 {data?.map((location) => {
                     return (
                         <LocationItem key={location.id} location={location} />

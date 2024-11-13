@@ -4,9 +4,11 @@ import Footer from './Footer.jsx'
 
 function Sidebar() {
     return (
-        <main className="relative overflow-y-scroll">
+        <main className="relative flex flex-col overflow-y-scroll">
             <Header />
-            <Outlet />
+            <main className="flex-grow">
+                <Outlet />
+            </main>
             <Footer />
         </main>
     )

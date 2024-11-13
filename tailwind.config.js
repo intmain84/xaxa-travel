@@ -19,7 +19,40 @@ export default {
             14: '96px',
             15: '104px',
         },
-        extend: {},
+
+        borderRadius: {
+            none: '0',
+            xsm: '.125rem',
+            sm: '.25rem',
+            DEFAULT: '.5rem',
+            lg: '1rem',
+            xl: '1.5rem',
+            '2xl': '2rem',
+            full: '9999px',
+        },
+
+        fontSize: {
+            base: ['1rem', '1.5rem'],
+            lg: ['1.5rem', '2rem'],
+            xl: ['2rem', '2.5rem'],
+            '2xl': ['2.5rem', '3rem'],
+        },
+
+        fontFamily: {
+            funnel: ['Funnel', 'sans-serif'],
+        },
+
+        extend: {
+            colors: {
+                'dark-green': '#0A4C38',
+                'light-green': '#0D5D45',
+                'lighter-green': '#47CB88',
+                'toxic-green': '#D1EFBA',
+                'light-blue': '#EAF3F5',
+                'light-sky': '#66A6FD',
+                'dark-sky': '#4583D6',
+            },
+        },
     },
     plugins: [],
 }

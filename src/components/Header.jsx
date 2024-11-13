@@ -3,28 +3,39 @@ import { queryClient } from '../services/queryClient.js'
 import supabase from '../services/supabase'
 
 import Logo from './Logo'
-import Button from '../components/Button'
 import { useContext } from 'react'
 import { UserContext } from '../context/UserContext'
+import AccountIc from './icons/AccountIc.jsx'
+import useSignIn from '../hooks/useSignIn.jsx'
+import LogoutIc from './icons/LogoutIc.jsx'
 
 function Header() {
+    const { signIn, signInError } = useSignIn()
     const { isLoggedIn } = useContext(UserContext)
 
     const signOut = async () => {
-        const { error } = await supabase.auth.signOut()
+        const { error: signOutError } = await supabase.auth.signOut()
         queryClient.invalidateQueries({ queryKey: ['user'] })
     }
 
     return (
-        <header className="mt-6 flex justify-center text-xl px-4">
-            <Link to="/" className="">
+        <header className="relative mt-6 flex h-7 px-4 text-xl">
+            <Link
+                to="/"
+                className="absolute left-1/2 -translate-x-1/2 text-center"
+            >
                 <Logo />
             </Link>
 
             {isLoggedIn && (
-                <Button width="flex-1" onClick={signOut}>
-                    Login out
-                </Button>
+                <div onClick={signOut} className="ml-auto cursor-pointer">
+                    <LogoutIc />
+                </div>
+            )}
+            {!isLoggedIn && (
+                <div onClick={signIn} className="ml-auto cursor-pointer">
+                    <AccountIc />
+                </div>
             )}
         </header>
     )
