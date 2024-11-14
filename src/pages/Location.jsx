@@ -2,9 +2,11 @@ import { useParams } from 'react-router-dom'
 import SpinnerFull from '../components/SpinnerFull.jsx'
 import Button from '../components/Button.jsx'
 import useGetLocation from '../hooks/useGetLocation.js'
-import { useContext } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { UserContext } from '../context/UserContext.jsx'
 import useDeleteLocation from '../hooks/useDeleteLocation.jsx'
+import Lightbox from 'yet-another-react-lightbox'
+import 'yet-another-react-lightbox/styles.css'
 
 function Location() {
     const { id } = useParams()
@@ -12,6 +14,8 @@ function Location() {
     const { isLoggedIn } = useContext(UserContext)
 
     const { data: location, isPending, error } = useGetLocation(id)
+
+    const [index, setIndex] = useState(-1)
 
     //MUTATION
     const { deleteLocation, isPendingDelete, errorDelete } =
@@ -34,22 +38,33 @@ function Location() {
     //DATA
     if (!isPending && !error) {
         return (
-            <>
+            <div className="mx-4 mt-9 rounded-lg bg-toxic-green p-5 text-dark-green transition-all duration-300">
                 <h1>{location.name}</h1>
-                <div className="flex gap-3">
+                <div className="my-4 flex gap-3">
                     {location.images.length > 0 &&
-                        location.images.map((image) => (
+                        location.images.map((image, i) => (
                             <img
                                 key={image.id}
                                 src={image.image_link}
-                                alt=""
-                                className="w-15"
+                                alt={location.name}
+                                className="aspect-square w-12 rounded-sm object-cover"
+                                onClick={() => setIndex(i)}
                             />
                         ))}
+                    <Lightbox
+                        index={index}
+                        open={index >= 0}
+                        close={() => setIndex(-1)}
+                        slides={location.images.map((image) => {
+                            return {
+                                src: image.image_link,
+                            }
+                        })}
+                    />
                 </div>
 
-                <div>Description: {location.description}</div>
-                <div className="flex items-center gap-3">
+                <div>{location.description}</div>
+                <div className="my-4 flex items-center gap-3">
                     <img
                         src={location.profiles.avatar_url}
                         alt=""
@@ -68,7 +83,7 @@ function Location() {
                         <Button onClick={handleDeleteLocation}>Delete</Button>
                     </>
                 )}
-            </>
+            </div>
         )
     }
 }
