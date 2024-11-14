@@ -59,9 +59,9 @@ function AddLocation() {
 
     if (!isCreatingLocation)
         return (
-            <>
+            <div className="mx-4 mt-9 rounded-lg bg-toxic-green p-5 text-dark-green">
                 <h1>Adding location</h1>
-                <form onSubmit={handleSubmit(onSubmit)}>
+                <form className="my-4" onSubmit={handleSubmit(onSubmit)}>
                     {/* NAME */}
                     <div className="mb-4">
                         <label htmlFor="name" className="font-bold">
@@ -74,9 +74,9 @@ function AddLocation() {
                             {...register('name', {
                                 required: 'This field is required',
                             })}
-                            className={`mt-2 h-7 w-full rounded border border-black px-3 ${errors?.name?.message ? 'border-red-600' : ''}`}
+                            className={`mt-2 h-7 w-full rounded border border-black px-3 ${errors?.name?.message ? 'border-light-red' : ''}`}
                         />
-                        <p className="mt-2 text-red-600">
+                        <p className="text-light-red mt-2">
                             {errors?.name?.message}
                         </p>
                     </div>
@@ -93,9 +93,9 @@ function AddLocation() {
                             {...register('description', {
                                 required: 'This field is required',
                             })}
-                            className={`mt-2 h-7 w-full rounded border border-black px-3 ${errors?.description?.message ? 'border-red-600' : ''}`}
+                            className={`mt-2 h-7 w-full rounded border border-black px-3 ${errors?.description?.message ? 'border-light-red' : ''}`}
                         />
-                        <p className="mt-2 text-red-600">
+                        <p className="text-light-red mt-2">
                             {errors?.description?.message}
                         </p>
                     </div>
@@ -111,16 +111,16 @@ function AddLocation() {
                             type="file"
                             accept="image/*"
                             multiple
-                            className={`mt-2 h-7 w-full rounded border border-black px-3 ${imgRequiredError || isFileSizeError ? 'border-red-600' : ''}`}
+                            className={`mt-2 h-7 w-full rounded border border-black px-3 ${imgRequiredError || isFileSizeError ? 'border-light-red' : ''}`}
                             onChange={onChangeFiles}
                         />
                         {imgRequiredError && (
-                            <p className="mt-2 text-red-600">
+                            <p className="text-light-red mt-2">
                                 Up to 5 images required
                             </p>
                         )}
                         {isFileSizeError && (
-                            <p className="mt-2 text-red-600">
+                            <p className="text-light-red mt-2">
                                 Each image must be less than 1mb
                             </p>
                         )}
@@ -137,7 +137,7 @@ function AddLocation() {
                                             className="aspect-video w-7 object-cover"
                                         />
                                         <div
-                                            className={`${showFileSize(image.file.size) > 1024 ? 'font-semibold text-red-600' : ''}`}
+                                            className={`${showFileSize(image.file.size) > 1024 ? 'text-light-red font-semibold' : ''}`}
                                         >
                                             Size:{' '}
                                             {showFileSize(image.file.size)}
@@ -157,7 +157,7 @@ function AddLocation() {
                         {isCreatingLocation ? 'Loading...' : 'Add location'}
                     </Button>
                 </form>
-            </>
+            </div>
         )
 }
 

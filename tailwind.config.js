@@ -51,6 +51,7 @@ export default {
                 'light-blue': '#EAF3F5',
                 'light-sky': '#66A6FD',
                 'dark-sky': '#4583D6',
+                'light-red': '#FF5356',
             },
         },
     },

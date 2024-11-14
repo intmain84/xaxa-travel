@@ -73,8 +73,8 @@ function EditLocation() {
 
     if (!isUpdatingLocation || !isGettingLocation)
         return (
-            <>
-                <h1>Editing location</h1>
+            <div className="mx-4 mt-9 rounded-lg bg-toxic-green p-5 text-dark-green">
+                <h1 className="my-4">Editing location</h1>
 
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <div className="mb-4">
@@ -89,9 +89,9 @@ function EditLocation() {
                             {...register('name', {
                                 required: 'This field is required',
                             })}
-                            className={`mt-2 h-7 w-full rounded border border-black px-3 ${errors?.description?.message && 'border-red-600'}`}
+                            className={`mt-2 h-7 w-full rounded border border-black px-3 ${errors?.description?.message && 'botext-light-red'}`}
                         />
-                        <p className="mt-2 text-red-600">
+                        <p className="text-light-red mt-2">
                             {errors?.name?.message}
                         </p>
                     </div>
@@ -99,17 +99,17 @@ function EditLocation() {
                         <label htmlFor="description" className="font-bold">
                             Description
                         </label>
-                        <input
+
+                        <textarea
                             disabled={isUpdatingLocation}
                             id="description"
-                            type="text"
                             defaultValue={oldData?.description}
                             {...register('description', {
                                 required: 'This field is required',
                             })}
-                            className={`mt-2 h-7 w-full rounded border border-black px-3 ${errors?.description?.message && 'border-red-600'}`}
+                            className={`mt-2 h-7 w-full rounded border border-black px-3 ${errors?.description?.message && 'botext-light-red'}`}
                         />
-                        <p className="mt-2 text-red-600">
+                        <p className="text-light-red mt-2">
                             {errors?.description?.message}
                         </p>
                     </div>
@@ -123,16 +123,16 @@ function EditLocation() {
                             type="file"
                             accept="image/*"
                             multiple
-                            className={`mt-2 h-7 w-full rounded border border-black px-3 ${imgRequiredError || isFileSizeError ? 'border-red-600' : ''}`}
+                            className={`mt-2 h-7 w-full rounded border border-black px-3 ${imgRequiredError || isFileSizeError ? 'botext-light-red' : ''}`}
                             onChange={onChangeFiles}
                         />
                         {imgRequiredError && (
-                            <p className="mt-2 text-red-600">
+                            <p className="text-light-red mt-2">
                                 Up to 5 images required
                             </p>
                         )}
                         {isFileSizeError && (
-                            <p className="mt-2 text-red-600">
+                            <p className="text-light-red mt-2">
                                 Each image must be less than 1mb
                             </p>
                         )}
@@ -183,7 +183,7 @@ function EditLocation() {
                                         key={index}
                                     />
                                     <span
-                                        className={`text-sm ${showFileSize(image.file.size) > 1024 ? 'font-semibold text-red-600' : ''}`}
+                                        className={`text-sm ${showFileSize(image.file.size) > 1024 ? 'text-light-red font-semibold' : ''}`}
                                     >
                                         Size: {showFileSize(image.file.size)}Kb
                                     </span>
@@ -204,7 +204,7 @@ function EditLocation() {
                         </Button>
                     </div>
                 </form>
-            </>
+            </div>
         )
 }
 

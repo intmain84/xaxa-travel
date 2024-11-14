@@ -1,26 +1,35 @@
 import { Link } from 'react-router-dom'
 
+const primaryBtn = 'bg-light-sky text-white hover:text-white hover:bg-dark-sky'
+const secondaryBtn =
+    'bg-transparent text-light-green border border-light-green hover:text-white hover:bg-dark-green hover:border-dark-green'
+const generalStyles =
+    'flex flex-col h-7 justify-center items-center rounded px-4 no-underline text-center transition-all duration-300'
+const dangerBtn =
+    'bg-transparent text-light-red border border-light-red hover:text-white hover:bg-light-red hover:border-light-red'
+
 function Button({
-    disabled = false,
+    children,
+    disabled = null,
+    danger = null,
     to = null,
-    primary = false,
+    primary = null,
     secondary = false,
-    width = null,
-    children: text,
+    width = 'w-full',
     onClick = null,
 }) {
     //TODO disabled style
-    const styles = `${primary ? 'bg-light-sky text-white hover:text-white hover:bg-dark-sky' : ''} ${secondary ? 'bg-transparent text-green-500 border border-green-500 hover:text-white hover:bg-green-700 hover:border-green-700' : ''} ${width ? width : ''} flex flex-col h-7 justify-center items-center rounded px-4 no-underline text-center transition-all duration-300`
+    const styles = `${danger ? dangerBtn : ''} ${primary ? primaryBtn : ''} ${secondary ? secondaryBtn : ''} ${width} ${generalStyles}`
     if (to) {
         return (
             <Link className={styles} to={to}>
-                {text}
+                {children}
             </Link>
         )
     }
     return (
         <button disabled={disabled} className={styles} onClick={onClick}>
-            {text}
+            {children}
         </button>
     )
 }

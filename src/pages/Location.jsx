@@ -38,7 +38,7 @@ function Location() {
     //DATA
     if (!isPending && !error) {
         return (
-            <div className="mx-4 mt-9 rounded-lg bg-toxic-green p-5 text-dark-green transition-all duration-300">
+            <div className="mx-4 mt-9 rounded-lg bg-toxic-green p-5 text-dark-green">
                 <h1>{location.name}</h1>
                 <div className="my-4 flex gap-3">
                     {location.images.length > 0 &&
@@ -47,7 +47,7 @@ function Location() {
                                 key={image.id}
                                 src={image.image_link}
                                 alt={location.name}
-                                className="aspect-square w-12 rounded-sm object-cover"
+                                className="aspect-square w-12 cursor-pointer rounded-sm object-cover transition-all duration-300 hover:opacity-60"
                                 onClick={() => setIndex(i)}
                             />
                         ))}
@@ -73,15 +73,17 @@ function Location() {
                     <span>{location.profiles.full_name}</span>
                 </div>
                 {isLoggedIn === location.user_id && (
-                    <>
+                    <div className="flex gap-3">
                         <Button
                             secondary
                             to={`/location/edit/${id}?lat=${location.lat}&lng=${location.lng}`}
                         >
                             Edit
                         </Button>
-                        <Button onClick={handleDeleteLocation}>Delete</Button>
-                    </>
+                        <Button secondary danger onClick={handleDeleteLocation}>
+                            Delete
+                        </Button>
+                    </div>
                 )}
             </div>
         )
