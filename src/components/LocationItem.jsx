@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 function LocationItem({ location }) {
     return (
         <Link
-            className="bg-light-green hover:bg-toxic-green hover:text-dark-green rounded-lg p-5 transition-all duration-300"
+            className="rounded-lg bg-light-green p-5 transition-all duration-300 hover:bg-toxic-green hover:text-dark-green hover:shadow-2xl"
             to={`/location/${location.id}?lat=${location.lat}&lng=${location.lng}`}
         >
             <div className="flex gap-4">

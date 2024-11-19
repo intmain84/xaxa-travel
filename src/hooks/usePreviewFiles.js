@@ -37,14 +37,14 @@ const usePreviewFiles = (
             //If edit === 'edit'
             setImgRequiredError(
                 oldData?.images.length - readyToRemove.length + images.length >
-                    5 ||
+                    4 ||
                     oldData?.images.length -
                         readyToRemove.length +
                         images.length ===
                         0
             )
         } else {
-            setImgRequiredError(images.length > 5 || images.length === 0)
+            setImgRequiredError(images.length > 4 || images.length === 0)
         }
     }, [
         images,

@@ -50,3 +50,7 @@
         transform: translateY(-10px);
     }
 }
+
+.yarl__slide_image {
+    border-radius: 16px;
+}

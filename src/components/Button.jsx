@@ -4,18 +4,18 @@ const primaryBtn = 'bg-light-sky text-white hover:text-white hover:bg-dark-sky'
 const secondaryBtn =
     'bg-transparent text-light-green border border-light-green hover:text-white hover:bg-dark-green hover:border-dark-green'
 const generalStyles =
-    'flex flex-col h-7 justify-center items-center rounded px-4 no-underline text-center transition-all duration-300'
+    'flex inline-flex items-center h-7 rounded px-4 no-underline text-center transition-all duration-300'
 const dangerBtn =
     'bg-transparent text-light-red border border-light-red hover:text-white hover:bg-light-red hover:border-light-red'
 
 function Button({
     children,
     disabled = null,
-    danger = null,
+    danger = '',
     to = null,
-    primary = null,
-    secondary = false,
-    width = 'w-full',
+    primary = '',
+    secondary = '',
+    width = '',
     onClick = null,
 }) {
     //TODO disabled style

@@ -1,7 +1,7 @@
-function AccountIc() {
+function LogoutIc() {
     return (
         <svg
-            className="fill-light-blue hover:fill-toxic-green transition-all duration-300"
+            className="fill-light-blue transition-all duration-300 hover:fill-toxic-green"
             width="40"
             height="40"
             viewBox="0 0 40 40"
@@ -16,4 +16,4 @@ function AccountIc() {
     )
 }
 
-export default AccountIc
+export default LogoutIc

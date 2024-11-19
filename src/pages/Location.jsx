@@ -4,9 +4,12 @@ import Button from '../components/Button.jsx'
 import useGetLocation from '../hooks/useGetLocation.js'
 import { useContext, useEffect, useState } from 'react'
 import { UserContext } from '../context/UserContext.jsx'
-import useDeleteLocation from '../hooks/useDeleteLocation.jsx'
+import useDeleteLocation from '../hooks/useDeleteLocation.js'
 import Lightbox from 'yet-another-react-lightbox'
 import 'yet-another-react-lightbox/styles.css'
+import PrevLightboxIc from '../components/icons/PrevLightboxIc.jsx'
+import NextLightboxIc from '../components/icons/NextLightboxIc.jsx'
+import CloseLightboxIc from '../components/icons/CloseLightboxIc.jsx'
 
 function Location() {
     const { id } = useParams()
@@ -52,6 +55,17 @@ function Location() {
                             />
                         ))}
                     <Lightbox
+                        render={{
+                            iconPrev: () => <PrevLightboxIc />,
+                            iconNext: () => <NextLightboxIc />,
+                            iconClose: () => <CloseLightboxIc />,
+                        }}
+                        styles={{
+                            container: {
+                                backgroundColor: 'rgba(0, 0, 0, .1)',
+                                backdropFilter: 'blur(20px)',
+                            },
+                        }}
                         index={index}
                         open={index >= 0}
                         close={() => setIndex(-1)}
@@ -73,7 +87,7 @@ function Location() {
                     <span>{location.profiles.full_name}</span>
                 </div>
                 {isLoggedIn === location.user_id && (
-                    <div className="flex gap-3">
+                    <div className="mt-4 flex justify-between gap-3">
                         <Button
                             secondary
                             to={`/location/edit/${id}?lat=${location.lat}&lng=${location.lng}`}

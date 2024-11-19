@@ -7,6 +7,7 @@ import { UserContext } from '../context/UserContext.jsx'
 import usePreviewFiles from '../hooks/usePreviewFiles.js'
 import useCreateEditLocation from '../hooks/useCreateEditLocation.js'
 import showFileSize from '../utilities/showFileSize.js'
+import { useNavigate } from 'react-router-dom'
 
 function AddLocation() {
     const { isLoggedIn } = useContext(UserContext)
@@ -15,6 +16,7 @@ function AddLocation() {
     const [images, setImages] = useState([])
     const [imgRequiredError, setImgRequiredError] = useState(false)
     const [isFileSizeError, setIsFileSizeError] = useState(false)
+    const navigate = useNavigate()
 
     //HOOK FORM
     const {
@@ -74,7 +76,7 @@ function AddLocation() {
                             {...register('name', {
                                 required: 'This field is required',
                             })}
-                            className={`mt-2 h-7 w-full rounded border border-black px-3 ${errors?.name?.message ? 'border-light-red' : ''}`}
+                            className={`mt-2 h-7 w-full rounded border border-light-green px-3 outline-lighter-green transition-all duration-300 ${errors?.name?.message ? 'border-light-red' : ''}`}
                         />
                         <p className="text-light-red mt-2">
                             {errors?.name?.message}
@@ -86,14 +88,14 @@ function AddLocation() {
                         <label htmlFor="description" className="font-bold">
                             Description
                         </label>
-                        <input
+                        <textarea
+                            rows="8"
                             disabled={isCreatingLocation}
                             id="description"
-                            type="text"
                             {...register('description', {
                                 required: 'This field is required',
                             })}
-                            className={`mt-2 h-7 w-full rounded border border-black px-3 ${errors?.description?.message ? 'border-light-red' : ''}`}
+                            className={`mt-2 w-full rounded border border-light-green px-3 outline-lighter-green ${errors?.description?.message ? 'border-light-red' : ''}`}
                         />
                         <p className="text-light-red mt-2">
                             {errors?.description?.message}
@@ -116,7 +118,7 @@ function AddLocation() {
                         />
                         {imgRequiredError && (
                             <p className="text-light-red mt-2">
-                                Up to 5 images required
+                                Up to 4 images required
                             </p>
                         )}
                         {isFileSizeError && (
@@ -153,9 +155,14 @@ function AddLocation() {
                             })}
                         </div>
                     </div>
-                    <Button primary onSubmit={handleSubmit(onSubmit)}>
-                        {isCreatingLocation ? 'Loading...' : 'Add location'}
-                    </Button>
+                    <div className="mt-4 flex justify-between gap-3">
+                        <Button primary onSubmit={handleSubmit(onSubmit)}>
+                            {isCreatingLocation ? 'Loading...' : 'Add location'}
+                        </Button>
+                        <Button secondary onClick={() => navigate(-1)}>
+                            Cancel
+                        </Button>
+                    </div>
                 </form>
             </div>
         )
