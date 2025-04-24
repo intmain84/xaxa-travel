@@ -3,14 +3,14 @@ import Button from '../components/Button'
 import { createLocation } from '../services/apiLocations'
 import { useState } from 'react'
 import { useContext } from 'react'
-import { UserContext } from '../context/UserContext.jsx'
+import { Context } from '../context/Context.jsx'
 import usePreviewFiles from '../hooks/usePreviewFiles.js'
 import useCreateEditLocation from '../hooks/useCreateEditLocation.js'
 import showFileSize from '../utilities/showFileSize.js'
 import { useNavigate } from 'react-router-dom'
 
 function AddLocation() {
-    const { isLoggedIn } = useContext(UserContext)
+    const { isLoggedIn, setNewPlaceName } = useContext(Context)
 
     //Images data
     const [images, setImages] = useState([])
@@ -77,8 +77,9 @@ function AddLocation() {
                                 required: 'This field is required',
                             })}
                             className={`mt-2 h-7 w-full rounded border border-light-green px-3 outline-lighter-green transition-all duration-300 ${errors?.name?.message ? 'border-light-red' : ''}`}
+                            onChange={(e) => setNewPlaceName(e.target.value)}
                         />
-                        <p className="text-light-red mt-2">
+                        <p className="mt-2 text-light-red">
                             {errors?.name?.message}
                         </p>
                     </div>
@@ -97,7 +98,7 @@ function AddLocation() {
                             })}
                             className={`mt-2 w-full rounded border border-light-green px-3 outline-lighter-green ${errors?.description?.message ? 'border-light-red' : ''}`}
                         />
-                        <p className="text-light-red mt-2">
+                        <p className="mt-2 text-light-red">
                             {errors?.description?.message}
                         </p>
                     </div>
@@ -117,12 +118,12 @@ function AddLocation() {
                             onChange={onChangeFiles}
                         />
                         {imgRequiredError && (
-                            <p className="text-light-red mt-2">
+                            <p className="mt-2 text-light-red">
                                 Up to 4 images required
                             </p>
                         )}
                         {isFileSizeError && (
-                            <p className="text-light-red mt-2">
+                            <p className="mt-2 text-light-red">
                                 Each image must be less than 1mb
                             </p>
                         )}
@@ -139,7 +140,7 @@ function AddLocation() {
                                             className="aspect-video w-7 object-cover"
                                         />
                                         <div
-                                            className={`${showFileSize(image.file.size) > 1024 ? 'text-light-red font-semibold' : ''}`}
+                                            className={`${showFileSize(image.file.size) > 1024 ? 'font-semibold text-light-red' : ''}`}
                                         >
                                             Size:{' '}
                                             {showFileSize(image.file.size)}
@@ -159,7 +160,7 @@ function AddLocation() {
                         <Button primary onSubmit={handleSubmit(onSubmit)}>
                             {isCreatingLocation ? 'Loading...' : 'Add location'}
                         </Button>
-                        <Button secondary onClick={() => navigate(-1)}>
+                        <Button secondary onClick={() => navigate('/')}>
                             Cancel
                         </Button>
                     </div>

@@ -36,14 +36,11 @@ function MyMarker({ id, position, children }) {
         }
     }, [locationId])
 
-    const eventHandlers = useMemo(
-        () => ({
-            click() {
-                navigate(`location/${id}?lat=${position[0]}&lng=${position[1]}`)
-            },
-        }),
-        [id, locationId]
-    )
+    const eventHandlers = {
+        click() {
+            navigate(`location/${id}?lat=${position[0]}&lng=${position[1]}`)
+        },
+    }
 
     return (
         <Marker

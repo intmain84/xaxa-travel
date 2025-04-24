@@ -2,8 +2,8 @@ import { useParams } from 'react-router-dom'
 import SpinnerFull from '../components/SpinnerFull.jsx'
 import Button from '../components/Button.jsx'
 import useGetLocation from '../hooks/useGetLocation.js'
-import { useContext, useEffect, useState } from 'react'
-import { UserContext } from '../context/UserContext.jsx'
+import { useContext, useState } from 'react'
+import { Context } from '../context/Context.jsx'
 import useDeleteLocation from '../hooks/useDeleteLocation.js'
 import Lightbox from 'yet-another-react-lightbox'
 import 'yet-another-react-lightbox/styles.css'
@@ -14,7 +14,7 @@ import CloseLightboxIc from '../components/icons/CloseLightboxIc.jsx'
 function Location() {
     const { id } = useParams()
 
-    const { isLoggedIn } = useContext(UserContext)
+    const { isLoggedIn } = useContext(Context)
 
     const { data: location, isPending, error } = useGetLocation(id)
 
@@ -43,39 +43,42 @@ function Location() {
         return (
             <div className="mx-4 mt-9 rounded-lg bg-toxic-green p-5 text-dark-green">
                 <h1>{location.name}</h1>
-                <div className="my-4 flex gap-3">
-                    {location.images.length > 0 &&
-                        location.images.map((image, i) => (
-                            <img
-                                key={image.id}
-                                src={image.image_link}
-                                alt={location.name}
-                                className="aspect-square w-12 cursor-pointer rounded-sm object-cover transition-all duration-300 hover:opacity-60"
-                                onClick={() => setIndex(i)}
-                            />
-                        ))}
-                    <Lightbox
-                        render={{
-                            iconPrev: () => <PrevLightboxIc />,
-                            iconNext: () => <NextLightboxIc />,
-                            iconClose: () => <CloseLightboxIc />,
-                        }}
-                        styles={{
-                            container: {
-                                backgroundColor: 'rgba(0, 0, 0, .1)',
-                                backdropFilter: 'blur(20px)',
-                            },
-                        }}
-                        index={index}
-                        open={index >= 0}
-                        close={() => setIndex(-1)}
-                        slides={location.images.map((image) => {
-                            return {
-                                src: image.image_link,
-                            }
-                        })}
-                    />
-                </div>
+                {isPending && 'Loading...'}
+                {!isPending && (
+                    <div className="my-4 flex gap-3">
+                        {location.images.length > 0 &&
+                            location.images.map((image, i) => (
+                                <img
+                                    key={image.id}
+                                    src={image.image_link}
+                                    alt={location.name}
+                                    className="aspect-square w-12 cursor-pointer rounded-sm object-cover transition-all duration-300 hover:opacity-60"
+                                    onClick={() => setIndex(i)}
+                                />
+                            ))}
+                        <Lightbox
+                            render={{
+                                iconPrev: () => <PrevLightboxIc />,
+                                iconNext: () => <NextLightboxIc />,
+                                iconClose: () => <CloseLightboxIc />,
+                            }}
+                            styles={{
+                                container: {
+                                    backgroundColor: 'rgba(0, 0, 0, .1)',
+                                    backdropFilter: 'blur(20px)',
+                                },
+                            }}
+                            index={index}
+                            open={index >= 0}
+                            close={() => setIndex(-1)}
+                            slides={location.images.map((image) => {
+                                return {
+                                    src: image.image_link,
+                                }
+                            })}
+                        />
+                    </div>
+                )}
 
                 <div>{location.description}</div>
                 <div className="my-4 flex items-center gap-3">

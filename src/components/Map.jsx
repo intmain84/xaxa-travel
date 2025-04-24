@@ -7,21 +7,24 @@ import {
     useMapEvents,
 } from 'react-leaflet'
 import { getCoordinates } from '../services/apiLocations'
-import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useContext, useEffect, useState } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 import MyMarker from './MyMarker'
 import { useGeolocation } from '../hooks/useGeolocation'
 import useUrlPosition from '../hooks/useUrlPosition'
+import { Context } from '../context/Context'
 
 function Map() {
+    const location = useLocation()
+    const { pathname } = location
+
+    const { newPlaceName } = useContext(Context)
     const [mapPosition, setMapPosition] = useState([
         49.35375571830993, 23.510742187500004,
     ])
 
     const {
         data: coord,
-        isPending,
-        isLoading,
         isFetching,
         error,
     } = useQuery({
@@ -46,9 +49,14 @@ function Map() {
     }, [position])
 
     return (
-        <div className="overflow-hidden rounded-r-lg">
-            <MapContainer center={mapPosition} zoom={11}>
-                <TileLayer url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png" />
+        <div className="overflow-hidden">
+            <MapContainer center={mapPosition} zoom={5}>
+                <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+                {mapLat && mapLng && pathname == '/create' && (
+                    <MyMarker position={[mapLat, mapLng]}>
+                        <Tooltip permanent>{newPlaceName}</Tooltip>
+                    </MyMarker>
+                )}
                 {!isFetching &&
                     coord.map((pos) => (
                         <MyMarker
@@ -73,9 +81,11 @@ function NewCenter({ position }) {
 }
 
 function ClickGetPosition({ onClick }) {
+    const { setNewPlaceName } = useContext(Context)
     const navigate = useNavigate()
     const map = useMapEvents({
         click: (e) => {
+            setNewPlaceName('New location')
             navigate(`create?lat=${e.latlng.lat}&lng=${e.latlng.lng}`)
         },
     })

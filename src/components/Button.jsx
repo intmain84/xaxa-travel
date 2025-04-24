@@ -1,10 +1,10 @@
 import { Link } from 'react-router-dom'
 
-const primaryBtn = 'bg-light-sky text-white hover:text-white hover:bg-dark-sky'
+const primaryBtn = 'bg-black text-white hover:text-white hover:bg-gray-700'
 const secondaryBtn =
     'bg-transparent text-light-green border border-light-green hover:text-white hover:bg-dark-green hover:border-dark-green'
 const generalStyles =
-    'flex inline-flex items-center h-7 rounded px-4 no-underline text-center transition-all duration-300'
+    'flex inline-flex justify-center items-center h-10 px-4 no-underline text-center transition-all duration-300 uppercase'
 const dangerBtn =
     'bg-transparent text-light-red border border-light-red hover:text-white hover:bg-light-red hover:border-light-red'
 
@@ -19,7 +19,7 @@ function Button({
     onClick = null,
 }) {
     //TODO disabled style
-    const styles = `${danger ? dangerBtn : ''} ${primary ? primaryBtn : ''} ${secondary ? secondaryBtn : ''} ${width} ${generalStyles}`
+    const styles = `${danger ? dangerBtn : ''} ${primary ? primaryBtn : ''} ${secondary ? secondaryBtn : ''} ${width} ${generalStyles}  b`
     if (to) {
         return (
             <Link className={styles} to={to}>

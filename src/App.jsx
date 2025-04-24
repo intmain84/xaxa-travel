@@ -13,71 +13,42 @@ import EditLocation from './pages/EditLocation'
 import NoMatch from './pages/NoMatch'
 import SpinnerFull from './components/SpinnerFull'
 
-import ProtectedAllRoutes from './components/ProtectedAllRoutes'
-import ProtectedHomeRoute from './components/ProtectedHomeRoute'
-import { UserProvider } from './context/UserContext'
-import ProtectedPublicRoute from './components/ProtectedPublicRoute.jsx'
+import { AppProvider } from './context/Context.jsx'
 
 function App() {
     return (
         <QueryClientProvider client={queryClient}>
             <ReactQueryDevtools initialIsOpen={false} />
-            <UserProvider>
+            <AppProvider>
                 <BrowserRouter>
                     <Suspense fallback={<SpinnerFull />}>
                         <Routes>
                             <Route path="/" element={<Layout />}>
-                                {/* Protected Home route */}
-                                <Route
-                                    index
-                                    element={
-                                        <ProtectedHomeRoute>
-                                            <Home />
-                                        </ProtectedHomeRoute>
-                                    }
-                                ></Route>
+                                <Route index element={<Home />}></Route>
 
-                                {/* Protected routes */}
                                 <Route
                                     path="create"
-                                    element={
-                                        <ProtectedAllRoutes>
-                                            <AddLocation />
-                                        </ProtectedAllRoutes>
-                                    }
+                                    element={<AddLocation />}
                                 ></Route>
                                 <Route
                                     path="location/edit/:id"
-                                    element={
-                                        <ProtectedAllRoutes>
-                                            <EditLocation />
-                                        </ProtectedAllRoutes>
-                                    }
+                                    element={<EditLocation />}
                                 ></Route>
                                 <Route
                                     path="profile"
-                                    element={
-                                        <ProtectedAllRoutes>
-                                            <Profile />
-                                        </ProtectedAllRoutes>
-                                    }
+                                    element={<Profile />}
                                 ></Route>
 
-                                {/* Public routes */}
                                 <Route
                                     path="location/:id"
-                                    element={
-                                        <ProtectedPublicRoute>
-                                            <Location />
-                                        </ProtectedPublicRoute>
-                                    }
+                                    element={<Location />}
                                 ></Route>
                                 <Route path="*" element={<NoMatch />} />
                             </Route>
                         </Routes>
                     </Suspense>
                 </BrowserRouter>
-            </UserProvider>
+            </AppProvider>
         </QueryClientProvider>
     )
 }

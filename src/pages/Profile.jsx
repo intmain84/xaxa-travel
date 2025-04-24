@@ -1,10 +1,10 @@
 import useGetUserLocations from '../hooks/useGetUserLocations.js'
 import { useContext } from 'react'
-import { UserContext } from '../context/UserContext.jsx'
+import { Context } from '../context/Context.jsx'
 import LocationItem from '../components/LocationItem.jsx'
 
 function Profile() {
-    const { isLoggedIn } = useContext(UserContext)
+    const { isLoggedIn } = useContext(Context)
     const { data, isPending, error } = useGetUserLocations(isLoggedIn)
 
     if (error && !isPending) return <div>{error.message}</div>

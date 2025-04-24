@@ -17,14 +17,12 @@
     height: 100vh;
 }
 
-@layer base {
-    @font-face {
-        font-family: 'Funnel';
-        font-style: normal;
-        font-display: swap;
-        src: url('assets/fonts/FunnelD.ttf') format('truetype');
-    }
+.inter {
+    font-family: 'Inter', sans-serif;
+    font-style: normal;
+}
 
+@layer base {
     h1 {
         @apply text-2xl font-bold;
     }
