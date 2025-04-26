@@ -64,7 +64,13 @@ function Map() {
                             id={pos.id}
                             position={[pos.lat, pos.lng]}
                         >
-                            <Tooltip>{pos.name}</Tooltip>
+                            <Tooltip
+                                direction="top"
+                                offset={[-13, -15]}
+                                className="marker-tooltip"
+                            >
+                                {pos.name}
+                            </Tooltip>
                         </MyMarker>
                     ))}
                 <ClickGetPosition />

@@ -55,6 +55,24 @@ export async function getUserLocations(user_id) {
     return data
 }
 
+//GET LATEST LOCATIONS
+export async function getLatestLocations() {
+    let { data, error } = await supabase
+        .from('locations')
+        .select(
+            `*,
+          images (id, image_link)`
+        )
+        .limit(10)
+
+    if (data.length === 0)
+        throw new Error("You haven't added any locations yet")
+
+    if (error) throw new Error("Couldn't get latest locations")
+
+    return data
+}
+
 //CREATE LOCATION
 export async function createLocation(newLocation) {
     const { images, ...location } = newLocation

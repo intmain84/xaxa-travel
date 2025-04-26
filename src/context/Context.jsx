@@ -9,13 +9,14 @@ function AppProvider({ children }) {
     const [session, setSession] = useState(null)
 
     useEffect(() => {
-        const getSesstion = async () => {
-            await supabase.auth.getSession().then(({ data: { session } }) => {
-                setSession(session)
-            })
+        const getSession = async () => {
+            const {
+                data: { session },
+            } = await supabase.auth.getSession()
+            setSession(session)
         }
 
-        getSesstion()
+        getSession()
 
         const {
             data: { subscription },

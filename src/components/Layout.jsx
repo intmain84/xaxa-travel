@@ -3,9 +3,9 @@ import Map from './Map'
 
 function Layout() {
     return (
-        <div className="grid h-full grid-cols-[auto_450px]">
-            <Map />
+        <div className="grid h-full grid-cols-[auto_700px]">
             <Sidebar />
+            <Map />
         </div>
     )
 }
