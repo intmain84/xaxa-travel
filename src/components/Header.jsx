@@ -18,11 +18,8 @@ function Header() {
     }
 
     return (
-        <header className="relative mt-6 flex h-7 justify-end px-4 text-xl">
-            <Link
-                to="/"
-                className="absolute left-1/2 -translate-x-1/2 text-center"
-            >
+        <header className="relative p-4 text-xl">
+            <Link to="/">
                 <Logo />
             </Link>
 

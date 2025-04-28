@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import {
+    LayersControl,
     MapContainer,
     TileLayer,
     Tooltip,
@@ -13,6 +14,24 @@ import MyMarker from './MyMarker'
 import { useGeolocation } from '../hooks/useGeolocation'
 import useUrlPosition from '../hooks/useUrlPosition'
 import { Context } from '../context/Context'
+import { Satellite, Map as MapIcon } from 'lucide-react'
+
+const { BaseLayer, Overlay } = LayersControl
+
+const mapTypes = {
+    default: {
+        url: 'https://tiles.stadiamaps.com/tiles/osm_bright/{z}/{x}/{y}{r}.{ext}',
+        attribution:
+            '&copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        ext: 'png',
+    },
+    satellite: {
+        url: 'https://tiles.stadiamaps.com/tiles/alidade_satellite/{z}/{x}/{y}{r}.{ext}',
+        attribution:
+            '&copy; CNES, Distribution Airbus DS, © Airbus DS, © PlanetObserver (Contains Copernicus Data) | &copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        ext: 'jpg',
+    },
+}
 
 function Map() {
     const location = useLocation()
@@ -22,6 +41,7 @@ function Map() {
     const [mapPosition, setMapPosition] = useState([
         49.35375571830993, 23.510742187500004,
     ])
+    const [isDefaultMap, setIsDefaultMap] = useState(true)
 
     const {
         data: coord,
@@ -49,21 +69,52 @@ function Map() {
     }, [position])
 
     return (
-        <div className="overflow-hidden">
-            <MapContainer center={mapPosition} zoom={5}>
-                <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+        <div style={{ position: 'relative', height: '100vh' }}>
+            {/* Layers switcher */}
+            <button
+                onClick={() => setIsDefaultMap((prev) => !prev)}
+                className="absolute right-3 top-4 z-[1000] cursor-pointer rounded-sm border-2 border-gray-300 bg-white p-3"
+            >
+                {isDefaultMap ? (
+                    <Satellite color="#000" size={18} strokeWidth={3} />
+                ) : (
+                    <MapIcon color="#000" size={18} strokeWidth={3} />
+                )}
+            </button>
+
+            {/* Map */}
+            <MapContainer
+                center={[51.505, -0.09]}
+                zoom={5}
+                style={{ height: '100%', width: '100%' }}
+            >
+                <TileLayer
+                    url={
+                        isDefaultMap
+                            ? mapTypes.default.url
+                            : mapTypes.satellite.url
+                    }
+                    attribution={
+                        isDefaultMap
+                            ? mapTypes.default.attribution
+                            : mapTypes.satellite.attribution
+                    }
+                    ext={
+                        isDefaultMap
+                            ? mapTypes.default.ext
+                            : mapTypes.satellite.ext
+                    }
+                />
+                {/* Markers */}
                 {mapLat && mapLng && pathname == '/create' && (
                     <MyMarker position={[mapLat, mapLng]}>
                         <Tooltip permanent>{newPlaceName}</Tooltip>
                     </MyMarker>
                 )}
+
                 {!isFetching &&
                     coord.map((pos) => (
-                        <MyMarker
-                            key={pos.id}
-                            id={pos.id}
-                            position={[pos.lat, pos.lng]}
-                        >
+                        <MyMarker id={pos.id} position={[pos.lat, pos.lng]}>
                             <Tooltip
                                 direction="top"
                                 offset={[-13, -15]}

@@ -1,5 +1,5 @@
 function Logo() {
-    return <img src="/Logo.svg" alt="Mapfly logo" />
+    return <img src="/logo.svg" alt="Mapfly logo" />
 }
 
 export default Logo
