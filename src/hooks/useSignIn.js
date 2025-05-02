@@ -1,7 +1,7 @@
 import { googleSignIn } from '../services/apiAuth'
 import { useState } from 'react'
 
-function UseSignIn() {
+function useSignIn() {
     const [signInError, setSignInError] = useState(false)
 
     const signIn = async () => {
@@ -13,4 +13,4 @@ function UseSignIn() {
     return { signInError, signIn }
 }
 
-export default UseSignIn
+export default useSignIn

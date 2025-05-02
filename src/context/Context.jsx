@@ -7,12 +7,14 @@ function AppProvider({ children }) {
     const [isLoggedIn, setIsLoggedIn] = useState(null)
     const [newPlaceName, setNewPlaceName] = useState('New location')
     const [session, setSession] = useState(null)
+    const [isPending, setPending] = useState(true)
 
     useEffect(() => {
         const getSession = async () => {
             const {
                 data: { session },
             } = await supabase.auth.getSession()
+            setPending(false)
             setSession(session)
         }
 
@@ -36,6 +38,7 @@ function AppProvider({ children }) {
                 setNewPlaceName,
                 session,
                 setSession,
+                isPending,
             }}
         >
             {children}

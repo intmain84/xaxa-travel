@@ -1,28 +1,28 @@
 import { Link } from 'react-router-dom'
-
-const primaryBtn = 'bg-black text-white hover:text-white hover:bg-gray-700'
-const secondaryBtn =
-    'bg-transparent text-light-green border border-light-green hover:text-white hover:bg-dark-green hover:border-dark-green'
-const generalStyles =
-    'flex inline-flex justify-center items-center h-10 px-4 no-underline text-center transition-all duration-300 uppercase'
-const dangerBtn =
-    'bg-transparent text-light-red border border-light-red hover:text-white hover:bg-light-red hover:border-light-red'
+import clsx from 'clsx'
 
 function Button({
     children,
-    disabled = null,
-    danger = '',
-    to = null,
-    primary = '',
-    secondary = '',
-    width = '',
-    onClick = null,
+    href,
+    onClick,
+    variant = 'primary',
+    className = '',
+    disabled = false,
+    ...rest
 }) {
-    //TODO disabled style
-    const styles = `${danger ? dangerBtn : ''} ${primary ? primaryBtn : ''} ${secondary ? secondaryBtn : ''} ${width} ${generalStyles}  b`
-    if (to) {
+    const basic = 'flex justify-center items-center font-medium px-5 py-4'
+    const variants = {
+        primary:
+            'bg-primary text-white hover:bg-primary-dark transition-all duration-500',
+        secondary:
+            'bg-secondary text-white hover:bg-secondary-dark transition-all duration-500',
+        ghost: 'bg-transparent hover:bg-gray-100',
+    }
+    const styles = clsx(basic, variants[variant], className)
+
+    if (href) {
         return (
-            <Link className={styles} to={to}>
+            <Link className={styles} to={href}>
                 {children}
             </Link>
         )

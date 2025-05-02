@@ -3,17 +3,15 @@ import { Navigate } from 'react-router-dom'
 import { Context } from '../context/Context'
 
 const ProtectedRoute = ({ children }) => {
-    const { session } = useContext(Context)
+    const { session, isPending } = useContext(Context)
 
-    //TODO Navigate to Home if user is not authenticated
-
-    if (!session) {
-        // Redirect to login if user is not authenticated
-        return <Navigate to="/login" replace />
+    if (!isPending && !session) {
+        // Redirect to Home page if user is not authenticated
+        return <Navigate to="/" replace />
     }
 
     // Render child components if user is authenticated
-    return children
+    if (!isPending && session) return children
 }
 
 export default ProtectedRoute

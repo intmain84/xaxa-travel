@@ -4,12 +4,9 @@ import supabase from '../services/supabase'
 import Logo from './Logo'
 import { useContext } from 'react'
 import { Context } from '../context/Context.jsx'
-import AccountIc from './icons/AccountIc.jsx'
-import useSignIn from '../hooks/useSignIn.jsx'
-import LogoutIc from './icons/LogoutIc.jsx'
+import { LogOut, User } from 'lucide-react'
 
 function Header() {
-    const { signIn, signInError } = useSignIn()
     const { session } = useContext(Context)
 
     const signOut = async () => {
@@ -18,21 +15,35 @@ function Header() {
     }
 
     return (
-        <header className="relative p-4 text-xl">
-            <Link to="/">
+        <header className="relative flex h-11 items-center justify-between p-4 text-xl">
+            <Link to="/" className="flex h-5 w-5">
                 <Logo />
             </Link>
 
-            <div className="flex">
+            <div className="flex gap-4">
                 {session && (
-                    <div onClick={signIn} className="ml-auto cursor-pointer">
-                        <AccountIc />
-                    </div>
+                    <Link
+                        to="/profile"
+                        className="group ml-auto cursor-pointer"
+                    >
+                        <User
+                            size={24}
+                            strokeWidth={2}
+                            className="transition-colors group-hover:text-blue-600"
+                        />
+                    </Link>
                 )}
                 {session && (
-                    <div onClick={signOut} className="ml-auto cursor-pointer">
-                        <LogoutIc />
-                    </div>
+                    <button
+                        onClick={signOut}
+                        className="group ml-auto cursor-pointer"
+                    >
+                        <LogOut
+                            size={24}
+                            strokeWidth={2}
+                            className="transition-colors group-hover:text-blue-600"
+                        />
+                    </button>
                 )}
             </div>
         </header>

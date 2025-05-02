@@ -1,4 +1,5 @@
 /** @type {import('tailwindcss').Config} */
+
 export default {
     content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
     theme: {
@@ -32,6 +33,7 @@ export default {
         },
 
         fontSize: {
+            sm: ['0.8rem', '1.5rem'],
             base: ['1rem', '1.5rem'],
             lg: ['1.5rem', '2rem'],
             xl: ['2rem', '2.5rem'],
@@ -39,21 +41,27 @@ export default {
         },
 
         fontFamily: {
-            funnel: ['Funnel', 'sans-serif'],
+            roboto: ['Roboto', 'sans-serif'],
         },
 
         extend: {
             colors: {
-                'dark-green': '#0A4C38',
-                'light-green': '#0D5D45',
-                'lighter-green': '#47CB88',
-                'toxic-green': '#D1EFBA',
-                'light-blue': '#EAF3F5',
-                'light-sky': '#66A6FD',
-                'dark-sky': '#4583D6',
-                'light-red': '#db3538',
+                primary: {
+                    DEFAULT: '#5A5DFF',
+                    light: '#7C7EFF',
+                    dark: '#4346CC',
+                },
+                secondary: {
+                    DEFAULT: '#222222',
+                    light: '#4F4F4F',
+                    dark: '#111111',
+                },
+                orange: {
+                    DEFAULT: '#FF6A13',
+                    light: '#FF8A4D',
+                    dark: '#CC5A00',
+                },
             },
         },
     },
-    plugins: [],
 }

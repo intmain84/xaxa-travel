@@ -6,7 +6,7 @@ function Layout() {
     return (
         <>
             <Header />
-            <div className="grid h-full grid-cols-[auto_700px]">
+            <div className="grid h-[calc(100lvh-72px)] grid-cols-2 bg-[#F0EEEC]">
                 <Sidebar />
                 <Map />
             </div>

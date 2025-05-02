@@ -1,6 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
 import {
-    LayersControl,
     MapContainer,
     TileLayer,
     Tooltip,
@@ -15,8 +14,6 @@ import { useGeolocation } from '../hooks/useGeolocation'
 import useUrlPosition from '../hooks/useUrlPosition'
 import { Context } from '../context/Context'
 import { Satellite, Map as MapIcon } from 'lucide-react'
-
-const { BaseLayer, Overlay } = LayersControl
 
 const mapTypes = {
     default: {
@@ -69,25 +66,19 @@ function Map() {
     }, [position])
 
     return (
-        <div style={{ position: 'relative', height: '100vh' }}>
-            {/* Layers switcher */}
-            <button
-                onClick={() => setIsDefaultMap((prev) => !prev)}
-                className="absolute right-3 top-4 z-[1000] cursor-pointer rounded-sm border-2 border-gray-300 bg-white p-3"
-            >
-                {isDefaultMap ? (
-                    <Satellite color="#000" size={18} strokeWidth={3} />
-                ) : (
-                    <MapIcon color="#000" size={18} strokeWidth={3} />
-                )}
-            </button>
-
+        <div>
             {/* Map */}
             <MapContainer
-                center={[51.505, -0.09]}
+                center={[mapLat, mapLng]}
                 zoom={5}
-                style={{ height: '100%', width: '100%' }}
+                style={{ height: '100%' }}
             >
+                {/* Layers switcher */}
+                <LayerSwitcher
+                    isDefaultMap={isDefaultMap}
+                    setIsDefaultMap={setIsDefaultMap}
+                    setMapPosition={setMapPosition}
+                />
                 <TileLayer
                     url={
                         isDefaultMap
@@ -124,10 +115,36 @@ function Map() {
                             </Tooltip>
                         </MyMarker>
                     ))}
-                <ClickGetPosition />
+                <ClickNewLocation />
                 <NewCenter position={mapPosition} />
             </MapContainer>
         </div>
+    )
+}
+
+// LayerSwitcher component
+function LayerSwitcher({ isDefaultMap, setIsDefaultMap, setMapPosition }) {
+    const map = useMap() // Получаем карту для контекста
+    const handleLayerChange = (e) => {
+        if (e.currentTarget.id === 'layer-switcher') {
+            const currentMapCenter = map.getCenter() // Получаем текущий центр карты
+            setMapPosition([currentMapCenter.lat, currentMapCenter.lng]) // Обновляем состояние с новым центром карты
+            setIsDefaultMap((prev) => !prev)
+        }
+    }
+
+    return (
+        <button
+            id="layer-switcher"
+            onClick={handleLayerChange}
+            className="absolute right-3 top-4 z-[1000] cursor-pointer rounded-sm border-2 border-gray-300 bg-white p-3"
+        >
+            {isDefaultMap ? (
+                <Satellite size={18} strokeWidth={2} />
+            ) : (
+                <MapIcon size={18} strokeWidth={2} />
+            )}
+        </button>
     )
 }
 
@@ -137,11 +154,14 @@ function NewCenter({ position }) {
     return null
 }
 
-function ClickGetPosition({ onClick }) {
+function ClickNewLocation() {
     const { setNewPlaceName } = useContext(Context)
     const navigate = useNavigate()
-    const map = useMapEvents({
+
+    useMapEvents({
         click: (e) => {
+            const target = e.originalEvent.target
+            if (e.originalEvent.target.closest('#layer-switcher')) return
             setNewPlaceName('New location')
             navigate(`create?lat=${e.latlng.lat}&lng=${e.latlng.lng}`)
         },

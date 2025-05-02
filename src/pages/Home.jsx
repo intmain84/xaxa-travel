@@ -1,6 +1,6 @@
 import { useContext } from 'react'
 import Button from '../components/Button'
-import useSignIn from '../hooks/useSignIn.jsx'
+import useSignIn from '../hooks/useSignIn'
 import { Context } from '../context/Context.jsx'
 import LastAddedLocations from './LastAddedLocations.jsx'
 
@@ -8,29 +8,31 @@ function Home() {
     const { signIn, signInError } = useSignIn()
     const { session } = useContext(Context)
 
-    //If session, show last added locations
-    if (session) {
-        return <LastAddedLocations />
-    }
-
     //If no session, show the welcome screen
-    if (!session) {
-        return (
-            <div className="mx-auto flex h-[calc(100%-72px)] max-w-[400px] flex-col justify-center">
-                <div className="h-shv mx-4 flex flex-col items-center gap-5 px-5 text-center">
-                    <h1>Fly High, Map Far!</h1>
-                    <p className="text-center">
-                        Explore iconic locations from your favorite movies and
-                        video games! Walk in the footsteps of Marty McFly or
-                        Arthur Morgan!
-                    </p>
-                    <Button primary width="w-full" onClick={signIn}>
+    return (
+        <div className="mx-auto mt-4 flex max-w-[100%-16px] flex-col">
+            {!session && (
+                <div className="h-shv mx-4 mb-4 flex items-center gap-5 bg-orange-300 p-5">
+                    <div className="flex flex-1 flex-col align-top">
+                        <h2 className="text-lg">Sign in to add locations</h2>
+                        <p>
+                            Explore iconic locations from your favorite movies
+                            and video games! Walk in the footsteps of Marty
+                            McFly or Arthur Morgan!
+                        </p>
+                    </div>
+                    <Button
+                        variant="secondary"
+                        className="w-[136px]"
+                        onClick={signIn}
+                    >
                         Sign In
                     </Button>
                 </div>
-            </div>
-        )
-    }
+            )}
+            <LastAddedLocations />
+        </div>
+    )
 }
 
 export default Home

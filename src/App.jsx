@@ -14,6 +14,7 @@ import NoMatch from './pages/NoMatch'
 import SpinnerFull from './components/SpinnerFull'
 
 import { AppProvider } from './context/Context.jsx'
+import ProtectedRoute from './components/ProtectedRoute.jsx'
 
 function App() {
     return (
@@ -36,9 +37,12 @@ function App() {
                                 ></Route>
                                 <Route
                                     path="profile"
-                                    element={<Profile />}
+                                    element={
+                                        <ProtectedRoute>
+                                            <Profile />
+                                        </ProtectedRoute>
+                                    }
                                 ></Route>
-
                                 <Route
                                     path="location/:id"
                                     element={<Location />}
