@@ -102,7 +102,11 @@ function Map() {
 
                 {!isFetching &&
                     coord.map((pos) => (
-                        <MyMarker id={pos.id} position={[pos.lat, pos.lng]}>
+                        <MyMarker
+                            key={pos.id}
+                            id={pos.id}
+                            position={[pos.lat, pos.lng]}
+                        >
                             <Tooltip
                                 direction="top"
                                 offset={[-13, -15]}

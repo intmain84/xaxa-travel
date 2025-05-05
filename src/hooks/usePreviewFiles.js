@@ -34,17 +34,16 @@ const usePreviewFiles = (
 
         // Check if image quantity exceeded
         if (edit) {
-            //If edit === 'edit'
             setImgRequiredError(
                 oldData?.images.length - readyToRemove.length + images.length >
-                    4 ||
+                    2 ||
                     oldData?.images.length -
                         readyToRemove.length +
                         images.length ===
                         0
             )
         } else {
-            setImgRequiredError(images.length > 4 || images.length === 0)
+            setImgRequiredError(images.length > 2 || images.length === 0)
         }
     }, [
         images,

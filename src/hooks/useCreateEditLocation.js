@@ -18,7 +18,7 @@ function useCreateEditLocation(action) {
         },
         onError: (error) => {
             console.log(error)
-            //Отработать тут ошибки
+            //TODO Handle errors
         },
     })
 

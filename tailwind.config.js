@@ -40,9 +40,7 @@ export default {
             '2xl': ['2.5rem', '3rem'],
         },
 
-        fontFamily: {
-            roboto: ['Roboto', 'sans-serif'],
-        },
+        fontFamily: { roboto: ['Roboto', 'sans-serif'] },
 
         extend: {
             colors: {
@@ -62,6 +60,15 @@ export default {
                     dark: '#CC5A00',
                 },
             },
+
+            keyframes: {
+                colorPulse: {
+                    '0%': { backgroundColor: '#fff' }, // жёлтый
+                    '50%': { backgroundColor: '#efefef' }, // красный
+                    '100%': { backgroundColor: '#fff' }, // обратно к жёлтому
+                },
+            },
+            animation: { colorPulse: 'colorPulse 2s ease-in-out infinite' },
         },
     },
 }

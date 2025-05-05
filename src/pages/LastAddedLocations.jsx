@@ -2,11 +2,10 @@ import LocationItem from '../components/LocationItem'
 import useGetLatestLocations from '../hooks/useGetLatestLocations'
 
 const LastAddedLocations = () => {
-    const { data, isPending, error } = useGetLatestLocations()
+    const { data, error } = useGetLatestLocations()
 
     return (
-        <div className="mx-4 mb-4">
-            {isPending && <p>Loading...</p>}
+        <div>
             {error && <p>Error: {error.message}</p>}
             {data && data.length > 0 && (
                 <ul className="grid grid-cols-3 gap-4">

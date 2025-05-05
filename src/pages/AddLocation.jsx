@@ -8,9 +8,11 @@ import usePreviewFiles from '../hooks/usePreviewFiles.js'
 import useCreateEditLocation from '../hooks/useCreateEditLocation.js'
 import showFileSize from '../utilities/showFileSize.js'
 import { useNavigate } from 'react-router-dom'
+import useGetAddress from '../hooks/useGetAddress.js'
+import { useEffect } from 'react'
 
 function AddLocation() {
-    const { isLoggedIn, setNewPlaceName } = useContext(Context)
+    const { session, setNewPlaceName } = useContext(Context)
 
     //Images data
     const [images, setImages] = useState([])
@@ -21,9 +23,10 @@ function AddLocation() {
     //HOOK FORM
     const {
         register,
+        reset,
         handleSubmit,
         formState: { errors },
-    } = useForm()
+    } = useForm({ defaultValues: { location: '' } })
 
     //CREATE LOCATION
     const {
@@ -33,6 +36,12 @@ function AddLocation() {
         lat,
         lng,
     } = useCreateEditLocation(createLocation)
+
+    const {
+        address,
+        loading: loadingAddress,
+        error: getAddressError,
+    } = useGetAddress(lat, lng)
 
     //Calling API function
     const onSubmit = (data) => {
@@ -44,7 +53,7 @@ function AddLocation() {
             ...data,
             lat: Number(lat),
             lng: Number(lng),
-            user_id: isLoggedIn,
+            user_id: session.user.id,
             images: newImages,
         }
         mutate(data)
@@ -57,11 +66,17 @@ function AddLocation() {
         setIsFileSizeError
     )
 
+    useEffect(() => {
+        if (address) {
+            reset({ location: address })
+        }
+    }, [address, reset])
+
     if (isCreatingLocation) return <div>LOADINGGGGGG</div>
 
     if (!isCreatingLocation)
         return (
-            <div className="mx-4 mt-9 rounded-lg bg-toxic-green p-5 text-dark-green">
+            <div className="bg-toxic-green text-dark-green mx-4 mt-9 rounded-lg p-5">
                 <h1>Adding location</h1>
                 <form className="my-4" onSubmit={handleSubmit(onSubmit)}>
                     {/* NAME */}
@@ -76,11 +91,50 @@ function AddLocation() {
                             {...register('name', {
                                 required: 'This field is required',
                             })}
-                            className={`mt-2 h-7 w-full rounded border border-light-green px-3 outline-lighter-green transition-all duration-300 ${errors?.name?.message ? 'border-light-red' : ''}`}
+                            className={`border-light-green outline-lighter-green mt-2 h-7 w-full rounded border px-3 transition-all duration-300 ${errors?.name?.message ? 'border-light-red' : ''}`}
                             onChange={(e) => setNewPlaceName(e.target.value)}
                         />
-                        <p className="mt-2 text-light-red">
+                        <p className="text-light-red mt-2">
                             {errors?.name?.message}
+                        </p>
+                    </div>
+
+                    {/* PROJECT */}
+                    <div className="mb-4">
+                        <label htmlFor="project" className="font-bold">
+                            Project
+                        </label>
+                        <input
+                            disabled={isCreatingLocation}
+                            id="project"
+                            type="text"
+                            {...register('project', {
+                                required: 'This field is required',
+                            })}
+                            className={`border-light-green outline-lighter-green mt-2 h-7 w-full rounded border px-3 transition-all duration-300 ${errors?.project?.message ? 'border-light-red' : ''}`}
+                        />
+                        <p className="text-light-red mt-2">
+                            {errors?.project?.message}
+                        </p>
+                    </div>
+
+                    {/* ADDRESS */}
+                    <div className="mb-4">
+                        <label htmlFor="location" className="font-bold">
+                            Location
+                        </label>
+                        <input
+                            disabled={isCreatingLocation}
+                            id="location"
+                            type="text"
+                            defaultValue={address}
+                            {...register('location', {
+                                required: 'This field is required',
+                            })}
+                            className={`border-light-green outline-lighter-green mt-2 h-7 w-full rounded border px-3 transition-all duration-300 ${errors?.location?.message ? 'border-light-red' : ''}`}
+                        />
+                        <p className="text-light-red mt-2">
+                            {errors?.location?.message}
                         </p>
                     </div>
 
@@ -90,15 +144,15 @@ function AddLocation() {
                             Description
                         </label>
                         <textarea
-                            rows="8"
+                            rows="4"
                             disabled={isCreatingLocation}
                             id="description"
                             {...register('description', {
                                 required: 'This field is required',
                             })}
-                            className={`mt-2 w-full rounded border border-light-green px-3 outline-lighter-green ${errors?.description?.message ? 'border-light-red' : ''}`}
+                            className={`border-light-green outline-lighter-green mt-2 w-full rounded border px-3 ${errors?.description?.message ? 'border-light-red' : ''}`}
                         />
-                        <p className="mt-2 text-light-red">
+                        <p className="text-light-red mt-2">
                             {errors?.description?.message}
                         </p>
                     </div>
@@ -118,12 +172,12 @@ function AddLocation() {
                             onChange={onChangeFiles}
                         />
                         {imgRequiredError && (
-                            <p className="mt-2 text-light-red">
-                                Up to 4 images required
+                            <p className="text-light-red mt-2">
+                                Up to 2 images required
                             </p>
                         )}
                         {isFileSizeError && (
-                            <p className="mt-2 text-light-red">
+                            <p className="text-light-red mt-2">
                                 Each image must be less than 1mb
                             </p>
                         )}
@@ -140,7 +194,7 @@ function AddLocation() {
                                             className="aspect-video w-7 object-cover"
                                         />
                                         <div
-                                            className={`${showFileSize(image.file.size) > 1024 ? 'font-semibold text-light-red' : ''}`}
+                                            className={`${showFileSize(image.file.size) > 1024 ? 'text-light-red font-semibold' : ''}`}
                                         >
                                             Size:{' '}
                                             {showFileSize(image.file.size)}
@@ -160,7 +214,10 @@ function AddLocation() {
                         <Button primary onSubmit={handleSubmit(onSubmit)}>
                             {isCreatingLocation ? 'Loading...' : 'Add location'}
                         </Button>
-                        <Button secondary onClick={() => navigate('/')}>
+                        <Button
+                            variant="secondary"
+                            onClick={() => navigate('/')}
+                        >
                             Cancel
                         </Button>
                     </div>

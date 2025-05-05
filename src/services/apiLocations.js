@@ -26,6 +26,8 @@ export async function getLocation(id) {
         )
         .eq('id', id)
 
+    console.log(data)
+
     if (data.length === 0) throw new Error('No location found')
 
     if (error) throw new Error(error.message)
