@@ -44,10 +44,7 @@ function Map() {
         data: coord,
         isFetching,
         error,
-    } = useQuery({
-        queryKey: ['coord'],
-        queryFn: getCoordinates,
-    })
+    } = useQuery({ queryKey: ['coord'], queryFn: getCoordinates })
 
     const { getPosition, position } = useGeolocation()
 
@@ -155,15 +152,17 @@ function NewCenter({ position }) {
 }
 
 function ClickNewLocation() {
-    const { setNewPlaceName } = useContext(Context)
+    const { setNewPlaceName, session } = useContext(Context)
     const navigate = useNavigate()
 
     useMapEvents({
         click: (e) => {
-            const target = e.originalEvent.target
-            if (e.originalEvent.target.closest('#layer-switcher')) return
-            setNewPlaceName('New location')
-            navigate(`create?lat=${e.latlng.lat}&lng=${e.latlng.lng}`)
+            if (session) {
+                const target = e.originalEvent.target
+                if (e.originalEvent.target.closest('#layer-switcher')) return
+                setNewPlaceName('New location')
+                navigate(`create?lat=${e.latlng.lat}&lng=${e.latlng.lng}`)
+            }
         },
     })
 

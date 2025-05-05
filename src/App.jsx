@@ -29,11 +29,19 @@ function App() {
 
                                 <Route
                                     path="create"
-                                    element={<AddLocation />}
+                                    element={
+                                        <ProtectedRoute>
+                                            <AddLocation />
+                                        </ProtectedRoute>
+                                    }
                                 ></Route>
                                 <Route
                                     path="location/edit/:id"
-                                    element={<EditLocation />}
+                                    element={
+                                        <ProtectedRoute>
+                                            <EditLocation />
+                                        </ProtectedRoute>
+                                    }
                                 ></Route>
                                 <Route
                                     path="profile"
