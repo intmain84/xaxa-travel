@@ -10,13 +10,12 @@ function Button({
     disabled = false,
     ...rest
 }) {
-    const basic = 'flex justify-center items-center font-medium px-5 py-4'
+    const basic =
+        'flex justify-center items-center font-medium px-5 py-4 transition-all duration-500'
     const variants = {
-        primary:
-            'bg-primary text-white hover:bg-primary-dark transition-all duration-500',
-        secondary:
-            'bg-secondary text-white hover:bg-secondary-dark transition-all duration-500',
-        ghost: 'bg-transparent hover:bg-gray-100',
+        primary: 'bg-primary text-white hover:bg-primary-dark',
+        secondary: 'bg-secondary text-white hover:bg-secondary-dark',
+        danger: 'bg-red-500 text-white hover:bg-red-600',
     }
     const styles = clsx(basic, variants[variant], className)
 

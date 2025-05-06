@@ -112,7 +112,12 @@ function Map() {
                                 offset={[-13, -15]}
                                 className="marker-tooltip"
                             >
-                                {pos.name}
+                                <div className="text-[16px] font-bold">
+                                    {pos.name}
+                                </div>{' '}
+                                <div className="w-fit rounded-full bg-orange-300 px-3 py-2 text-sm/[116%]">
+                                    {pos.project}
+                                </div>
                             </Tooltip>
                         </MyMarker>
                     ))}

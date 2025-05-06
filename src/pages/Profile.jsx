@@ -31,12 +31,12 @@ function Profile() {
             <div className="mt-4 flex-col gap-3 p-4">
                 <div className="mb-6 flex items-center gap-5">
                     <img
-                        src={user.avatar_url}
-                        alt={user.full_name}
+                        src={user?.avatar_url}
+                        alt={user?.full_name}
                         className="aspect-square h-12 w-12 rounded-full"
                     />
                     <h1 className="mb-2">
-                        {user.username || user.full_name} profile
+                        {user?.username || user?.full_name} profile
                     </h1>
                 </div>
                 <div className="mb-4 flex w-fit rounded-full bg-white p-2">
@@ -61,26 +61,23 @@ function Profile() {
                         <Heart /> Favorite locations
                     </button>
                 </div>
-                <div className="grid grid-cols-3 gap-4">
-                    {/* My locations */}
-                    {locations?.map((location) => {
-                        return (
-                            <LocationItem
-                                key={location.id}
-                                location={location}
-                            />
-                        )
-                    })}
-                    {/* Favorite locations */}
-                    {locations?.map((location) => {
-                        return (
-                            <LocationItem
-                                key={location.id}
-                                location={location}
-                            />
-                        )
-                    })}
-                </div>
+                {/* My locations */}
+                {activeTab === 0 && (
+                    <ul className="grid grid-cols-3 gap-4">
+                        {locations?.map((location) => {
+                            return (
+                                <LocationItem
+                                    key={location.id}
+                                    location={location}
+                                />
+                            )
+                        })}
+                    </ul>
+                )}
+                {/* Fav locations */}
+                {activeTab === 1 && (
+                    <ul className="grid grid-cols-3 gap-4">Soon...</ul>
+                )}
             </div>
         )
 }

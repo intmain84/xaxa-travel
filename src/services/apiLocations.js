@@ -6,7 +6,7 @@ import createImagesRows from '../utilities/createImagesRows.js'
 export async function getCoordinates() {
     const { data, error } = await supabase
         .from('locations')
-        .select('id, name, lat, lng')
+        .select('id, name, project, lat, lng')
 
     if (error) console.log(error.message)
 
@@ -65,7 +65,7 @@ export async function getLatestLocations() {
             `*,
           images (id, image_link)`
         )
-        .limit(10)
+        .limit(9)
 
     if (data.length === 0)
         throw new Error("You haven't added any locations yet")
