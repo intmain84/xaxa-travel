@@ -1,4 +1,4 @@
-import { supabaseUrl } from '../services/supabase.js'
+import { sbu } from '../services/supabase.js'
 
 // CREATING IMAGE PATHS
 function createImagesData(images) {
@@ -7,7 +7,7 @@ function createImagesData(images) {
         const name = `${Math.random()}-${file.name.replace(/[\/ _]/g, '')}`
         imagesData.push({
             imageName: name,
-            path: `${supabaseUrl}/storage/v1/object/public/locations/${name}`,
+            path: `${sbu}/storage/v1/object/public/locations/${name}`,
             file,
         })
     })
