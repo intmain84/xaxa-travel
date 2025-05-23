@@ -12,7 +12,9 @@ The goal was to create a user-friendly interface combining design and real-time 
 - Leaflet.js
 - Tailwind CSS
 - React Router
-— Supabase
+- Context API
+- TanStack Query
+- Supabase
 
 ## Getting Started
 
