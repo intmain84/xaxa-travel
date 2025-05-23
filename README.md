@@ -1,8 +1,28 @@
-# React + Vite
+# 🎬 Movie Location Map
+An interactive React app that displays famous movie filming locations on an interactive map.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This project allows users to explore real-world locations where famous movies were filmed.  
+It’s built with React, Leaflet for maps, and styled with Tailwind CSS.  
+The goal was to create a user-friendly interface combining design and real-time map interactivity.
 
-Currently, two official plugins are available:
+## Tech Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- React + Vite
+- JS
+- Leaflet.js
+- Tailwind CSS
+- React Router
+— Supabase
+
+## Getting Started
+
+1. Clone the repo  
+   `git clone https://github.com/intmain84/xaxa-travel.git`
+
+2. Install dependencies  
+   `npm install`
+
+3. Start the dev server  
+   `npm run dev`
+
+The app will be running on `http://localhost:5173`
