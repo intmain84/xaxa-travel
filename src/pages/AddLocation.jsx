@@ -11,6 +11,7 @@ import { useNavigate } from 'react-router-dom'
 import useGetAddress from '../hooks/useGetAddress.js'
 import { useEffect } from 'react'
 
+//Test
 function AddLocation() {
     const { session, setNewPlaceName } = useContext(Context)
 
